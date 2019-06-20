@@ -3,8 +3,9 @@ include_once('includes/config.php');
 $SUCCESS=false;
 $ERROR=false;
 $AUTHORIZED=false;
-if(isset($_POST['change'])){
-	$DB->query("update users set password='".UM_PASSWORD($_POST['password'])."' where _id={$_SESSION['UM_DATA']['_id']}");
+if(isset($_POST['change']) && isset($_SESSION['UM_DATA']['forget'])){
+	$DB->query("update users set password='".UM_PASSWORD($_POST['password'])."' where _id={$_SESSION['UM_DATA']['forget']}");
+	unset($_SESSION['UM_DATA']['forget']);
 	$SUCCESS="Your Password has been Changed";
 }else if(!isset($_GET['verify'])){
 	header('Location: user.php');
@@ -29,7 +30,7 @@ if(isset($_GET['verify'])){
 			$st->execute();
 			$SUCCESS="Your email Verified";
 		}else if($r['action']=='forget'){
-			$_SESSION['UM_DATA']=array('_id'=>$r['user_id'],'forget'=>true);
+			$_SESSION['UM_DATA']=array('_id'=>$r['user_id'],'forget'=>$r['user_id']);
 			$AUTHORIZED=true;
 		}
 	}catch(Exception $e){

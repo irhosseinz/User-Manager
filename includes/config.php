@@ -1,17 +1,17 @@
 <?php
-ini_set("log_errors", 0);
+ini_set("log_errors", 1);
 ini_set("error_log", "errors.log");
 /*UM_CONFIG*/
 define('SQL_HOST','localhost');
-define('SQL_DB','um');
-define('SQL_USER','um');
-define('SQL_PASS','3HaE8VXMblIxsHIl');
+define('SQL_DB','pool_mpool');
+define('SQL_USER','pool_mpool');
+define('SQL_PASS','lFz9Tmpp8c');
 
 define('UM_CAPTCHA_SITE','6Lejf6kUAAAAAKHpy37byUNy95qpiSWQIBHK9_mk');
 define('UM_CAPTCHA_SECRET','6Lejf6kUAAAAAEYpOo7fX5Z0G6wFqFnKAvj7uABM');
 
-define('UM_DOMAIN','http://UserManager.example');
-define('UM_EMAIL_FROM','noreply@example.com');
+define('UM_DOMAIN','http://mining.asiapool.org');
+define('UM_EMAIL_FROM','noreply@asiapool.org');
 /*UM_CONFIG*/
 
 $DB=new mysqli(SQL_HOST,SQL_USER,SQL_PASS,SQL_DB);
@@ -29,11 +29,11 @@ if(!isset($_SESSION['UM_DATA']) && isset($_COOKIE['UM_LOGIN'])){
 
 
 $UM_CONFIG=array(
-	/*UM_DATA*/"TITLE"=>'User Manager'
+	/*UM_DATA*/"TITLE"=>'Asiapool'
 	,/*UM_DATA*/"LANG"=>'EN'//msg me if you want another language
-	,/*UM_DATA*/"MSGS"=>'{"2_mobile":""}'
-	,/*UM_DATA*/"RULES"=>'{"1_username":{"required":true,"remote":"register.php?exist","minlength":6},"2_mobile":{"required":true,"minlength":10,"number":true},"3_newsletter":[]}'
-	,/*UM_DATA*/"FIELDS"=>'{"1_username":{"name":"username","type":"text","unique":true,"uneditable":true},"2_mobile":{"name":"mobile","type":"number","unique":false,"uneditable":true},"3_newsletter":{"name":"newsletter","type":"checkbox","unique":false,"uneditable":false}}'
+	,/*UM_DATA*/"MSGS"=>'{"1_username":"is Used while configuring Miner","2_mobile":"If Your mobile Number is: +123456789 Enter 123456789"}'
+	,/*UM_DATA*/"RULES"=>'{"1_username":{"required":true,"remote":"register.php?exist","minlength":5},"2_mobile":{"required":true,"minlength":10,"maxlength":20,"number":true},"3_bitcoinw":{"required":true}}'
+	,/*UM_DATA*/"FIELDS"=>'{"1_username":{"name":"Username","type":"text","unique":true,"uneditable":true,"nget":false},"2_mobile":{"name":"Mobile","type":"number","unique":false,"uneditable":false,"nget":false},"3_bitcoinw":{"name":"Bitcoin Wallet","type":"text","unique":false,"uneditable":false,"nget":true}}'
 );
 
 define(/*UM_DATA*/"UM_PASSWORD_HASH","JEnwNGCVIrPgBgCwNPRD");//DONT TOUCH THIS!!!!
