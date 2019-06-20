@@ -7,9 +7,22 @@ if(isset($_GET['error'])){
 }
 
 if($_POST){
-	$db="define('SQL_HOST','{$_POST['host']}');\ndefine('SQL_DB','{$_POST['name']}');\ndefine('SQL_USER','{$_POST['user']}');\ndefine('SQL_PASS','{$_POST['password']}');";
 	$data=file_get_contents('../includes/config.php');
-	$data=preg_replace('%UM_DB_CONFIG\*\/[\s\S]+\/\*UM_DB_CONFIG%',"UM_DB_CONFIG*/\n{$db}\n/*UM_DB_CONFIG",$data);
+	$data=preg_replace('%UM_DATA\*\/"TITLE"[\s\S]+\n%U','UM_DATA*/"TITLE"=>\''.$_POST['title'].'\''."\n",$data);
+	$db="define('SQL_HOST','{$_POST['host']}');\ndefine('SQL_DB','{$_POST['name']}');\ndefine('SQL_USER','{$_POST['user']}');\ndefine('SQL_PASS','{$_POST['password']}');";
+	if(@$_POST['captcha1']){
+		$db.="\n\ndefine('UM_CAPTCHA_SITE','{$_POST['captcha1']}');\ndefine('UM_CAPTCHA_SECRET','{$_POST['captcha2']}');";
+	}else{
+		$db.="\n\ndefine('UM_CAPTCHA_SITE','');//edit this to activate recaptcha-v3\ndefine('UM_CAPTCHA_SECRET','');";
+	}
+	if(preg_match('%https?:\/\/[^/]+%i',$_POST['domain'],$m)){
+		$d=strtolower($m[0]);
+	}else if(preg_match('%^[^/]+%i',$_POST['domain'],$m)){
+		$d='http://'.strtolower($m[0]);
+	}else $d='';
+	$db.="\n\ndefine('UM_DOMAIN','{$d}');";
+	$db.="\ndefine('UM_EMAIL_FROM','{$_POST['email']}');";
+	$data=preg_replace('%UM_CONFIG\*\/[\s\S]+\/\*UM_CONFIG%',"UM_CONFIG*/\n{$db}\n/*UM_CONFIG",$data);
 	if(file_put_contents('../includes/config.php',$data)){
 		header('Location: fields.php');
 		exit;
@@ -42,6 +55,7 @@ $( document ).ready(function(){
 	$("#form").validate({
 		focusInvalid: false,onkeyup: false,
 		errorClass: "is-invalid",validClass: "is-valid",
+		rules:{domain:{url:true},email:{email:true}}
 		submitHandler: function(form) {
 			form.submit();
 		}
@@ -62,8 +76,27 @@ $( document ).ready(function(){
 
 
 <div class="container">
-<p>Welcome to UserManager installer. please insert your database info:</p>
 <form id="form" method="post" action="index.php">
+	<p>Welcome to UserManager, to Get started fill below fields:</p>
+  <h3>Website Configuration:</h3>
+  <div class="form-group">
+    <label for="input_title">Website Title:</label>
+    <input type="text" class="form-control" name="title" required id="input_title" required/>
+  </div>
+  <div class="form-group">
+    <label for="input_domain">Your Domain:</label>
+    <input type="text" class="form-control" name="domain" required id="input_domain" required/>
+  </div>
+  <div class="form-group">
+    <label for="input_email">An email from above domain for using when sending Email to Users:</label>
+    <input type="email" class="form-control" name="email" required id="input_email" required placeholder="noreply@example.com"/>
+  </div>
+  <div class="form-group">
+    <label for="input_captcha1">If you want Recaptcha to be used for login and Registration and.. get a <a href="https://www.google.com/recaptcha/admin" target="_blank">Recaptcha V3</a> and enter it here. (Don't forget to add your domain there!)</label>
+    <input type="text" class="form-control" name="captcha1" required id="input_captcha1" placeholder="SITE KEY"/>
+    <input type="text" class="form-control" name="captcha2" required id="input_email" placeholder="SECRET KEY"/>
+  </div>
+  <h3>Mysql Configuration:</h3>
   <div class="form-group">
     <label for="input_host">Database Host</label>
     <input type="text" class="form-control" name="host" required id="input_host" required/>

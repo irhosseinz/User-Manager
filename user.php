@@ -88,9 +88,9 @@ if(isset($_POST['verify']) || isset($_GET['verify'])){
     <title>Dashboard</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/dashboard.css" rel="stylesheet">
-    <script src="js/popper.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
     <script src="js/jquery-3.4.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/popper.min.js"></script>
 	 <script src="/js/jquery.validate.min.js"></script>
 <script type="text/javascript">
 $( document ).ready(function(){
@@ -123,7 +123,7 @@ $( document ).ready(function(){
 	});
 	var msgs={};
 	var rules=<?php echo $UM_CONFIG['RULES'];?>;
-	$("#regForm1").validate({
+	$("#regForm2").validate({
 		focusInvalid: false,onkeyup: false,
 		errorClass: "is-invalid",validClass: "is-valid",
 		errorPlacement: function(error, element) {
@@ -138,6 +138,7 @@ $( document ).ready(function(){
 			form.submit();
 		}
 	});
+	$('[data-toggle="popover"]').popover();
 });
 </script>
   </head>

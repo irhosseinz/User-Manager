@@ -12,29 +12,36 @@ if(isset($_SESSION['UM_DATA'])){
 $SUCCESS=false;
 $ERROR=false;
 if(isset($_POST['forget'])){
-	$st=$DB->prepare("select * from users where email=? or email_temp=?");
-	$st->bind_param('ss',$_POST['forget'],$_POST['forget']);
-	if($st->execute() && $r=$st->get_result()->fetch_assoc()){
-		$st=$DB->prepare("insert into verify set user_id=?,email=?,secret=?,action=?");
-		$p=UM_randomString(rand(30,50));
-		$action='forget';
-		$email=($r['email']?$r['email']:$r['email_temp']);
-		$st->bind_param('isss',$r['_id'],$email,$p,$action);
-		if($st->execute()){
-			$link=UM_DOMAIN.'/verify.php?verify='.$DB->insert_id.'&email='.urlencode($email).'&code='.$p;
-			$mailC=file_get_contents('html/forgot_password.html');
-			$mailC=str_replace('<===UM_TITLE===>',$UM_CONFIG['TITLE'],$mailC);
-			$mailC=str_replace('<===UM_URL===>',$link,$mailC);
-			if(mail($email,"Reset Your Password In {$UM_CONFIG['TITLE']}",$mailC,"MIME-Version: 1.0\r\nContent-type: text/html; charset=UTF-8\r\nFrom: ".UM_EMAIL_FROM))
-				$SUCCESS="An Link containing Password-Reset link sent to Your Email ({$email}).";
-			else
-				$ERROR="An error occured on sending Email";
-		}
-	}else
-		$SUCCESS="This email is not a registered Email";
+	if(UM_CAPTCHA_SITE && !UM_VerifyCaptcha($_POST['captcha'])){
+		$ERROR='ARE YOU A BOT??';
+	}else{
+		$st=$DB->prepare("select * from users where email=? or email_temp=?");
+		$st->bind_param('ss',$_POST['forget'],$_POST['forget']);
+		if($st->execute() && $r=$st->get_result()->fetch_assoc()){
+			$st=$DB->prepare("insert into verify set user_id=?,email=?,secret=?,action=?");
+			$p=UM_randomString(rand(30,50));
+			$action='forget';
+			$email=($r['email']?$r['email']:$r['email_temp']);
+			$st->bind_param('isss',$r['_id'],$email,$p,$action);
+			if($st->execute()){
+				$link=UM_DOMAIN.'/verify.php?verify='.$DB->insert_id.'&email='.urlencode($email).'&code='.$p;
+				$mailC=file_get_contents('html/forgot_password.html');
+				$mailC=str_replace('<===UM_TITLE===>',$UM_CONFIG['TITLE'],$mailC);
+				$mailC=str_replace('<===UM_URL===>',$link,$mailC);
+				if(mail($email,"Reset Your Password In {$UM_CONFIG['TITLE']}",$mailC,"MIME-Version: 1.0\r\nContent-type: text/html; charset=UTF-8\r\nFrom: ".UM_EMAIL_FROM))
+					$SUCCESS="An Link containing Password-Reset link sent to Your Email ({$email}).";
+				else
+					$ERROR="An error occured on sending Email";
+			}
+		}else
+			$SUCCESS="This email is not a registered Email";	
+	}
 }else if(isset($_POST['email'])){
 	try{
-		$e=(UM_LOGIN_EXPIRE>0?",expire=TIMESTAMPADD(DAY,".UM_LOGIN_EXPIRE.",NOW())":'');
+		if(UM_CAPTCHA_SITE && !UM_VerifyCaptcha($_POST['captcha'])){
+			throw new Exception('ARE YOU A BOT??');
+		}
+		$e=",expire=TIMESTAMPADD(DAY,".(UM_LOGIN_EXPIRE>0?UM_LOGIN_EXPIRE:365).",NOW())";
 		$p=UM_randomString(rand(30,40));
 		$st=$DB->prepare("select * from users where email=? or email_temp=?");
 		$st->bind_param('ss',$_POST['email'],$_POST['email']);
@@ -151,6 +158,19 @@ if(isset($_GET['forget'])){
     <label for="input_email">Email address</label>
     <input type="email" class="form-control" name="forget" required id="input_email"/>
   </div>
+  <input type="hidden" name="captcha" id="captcha"/>
+  <?php
+	if(UM_CAPTCHA_SITE){
+		echo '<script src="https://www.google.com/recaptcha/api.js?render='.UM_CAPTCHA_SITE.'"></script>
+  <script>
+  grecaptcha.ready(function() {
+      grecaptcha.execute("'.UM_CAPTCHA_SITE.'", {action: "RESET PASSWORD"}).then(function(token) {
+         $("#captcha").val(token);
+      });
+  });
+  </script>';
+	}
+  ?>
   <br/><button type="submit" class="btn btn-primary my-1">Submit</button>
 </form>
 <?php
@@ -169,20 +189,21 @@ if(isset($_GET['forget'])){
     <input type="checkbox" class="form-check-input" name="remember" id="input_remember"/>
     <label for="input_remember" class="form-check-label">Remember Me</label>
   </div>
+  <input type="hidden" name="captcha" id="captcha"/>
   <?php
-//	if(isset($_GET['return'])){
-//		echo '<input type="hidden" name="return" value="'.$_GET['return'].'">';
-//	}
-//	if(UM_CAPTCHA_SITE){
-//		echo '<script src="https://www.google.com/recaptcha/api.js?render='.UM_CAPTCHA_SITE.'"></script>
-//  <script>
-//  grecaptcha.ready(function() {
-//      grecaptcha.execute("'.UM_CAPTCHA_SITE.'", {action: "'.home.'"}).then(function(token) {
-//         alert(token);
-//      });
-//  });
-//  </script>';
-//	}
+	if(isset($_GET['return'])){
+		echo '<input type="hidden" name="return" value="'.$_GET['return'].'">';
+	}
+	if(UM_CAPTCHA_SITE){
+		echo '<script src="https://www.google.com/recaptcha/api.js?render='.UM_CAPTCHA_SITE.'"></script>
+  <script>
+  grecaptcha.ready(function() {
+      grecaptcha.execute("'.UM_CAPTCHA_SITE.'", {action: "LOGIN"}).then(function(token) {
+         $("#captcha").val(token);
+      });
+  });
+  </script>';
+	}
   ?>
   <br/><button type="submit" class="btn btn-primary my-1">Submit</button>
   <br/><a href="login.php?forget"><span class="badge badge-warning">I Forgot my Password</span></a>

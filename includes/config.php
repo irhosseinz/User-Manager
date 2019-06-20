@@ -1,17 +1,31 @@
 <?php
-/*UM_DB_CONFIG*/
+ini_set("log_errors", 0);
+ini_set("error_log", "errors.log");
+/*UM_CONFIG*/
 define('SQL_HOST','localhost');
 define('SQL_DB','um');
 define('SQL_USER','um');
 define('SQL_PASS','3HaE8VXMblIxsHIl');
-/*UM_DB_CONFIG*/
 
 define('UM_CAPTCHA_SITE','6Lejf6kUAAAAAKHpy37byUNy95qpiSWQIBHK9_mk');
 define('UM_CAPTCHA_SECRET','6Lejf6kUAAAAAEYpOo7fX5Z0G6wFqFnKAvj7uABM');
 
+define('UM_DOMAIN','http://UserManager.example');
+define('UM_EMAIL_FROM','noreply@example.com');
+/*UM_CONFIG*/
+
 $DB=new mysqli(SQL_HOST,SQL_USER,SQL_PASS,SQL_DB);
 $DB->set_charset('utf8');
 session_start();
+if(!isset($_SESSION['UM_DATA']) && isset($_COOKIE['UM_LOGIN'])){
+	$c=explode('_',$_COOKIE['UM_LOGIN']);
+	$r=$DB->query("select *,UNIX_TIMESTAMP(expire) as e from login_log where _id=".intval($c[0]))->fetch_assoc();
+	if($r['e']>time() && $r['secret']==$c[1]){
+		$_SESSION['UM_DATA']=array('_id'=>$r['user_id']);
+	}else{
+		setcookie('UM_LOGIN','',-1);
+	}
+}
 
 
 $UM_CONFIG=array(
@@ -22,12 +36,11 @@ $UM_CONFIG=array(
 	,/*UM_DATA*/"FIELDS"=>'{"1_username":{"name":"username","type":"text","unique":true,"uneditable":true},"2_mobile":{"name":"mobile","type":"number","unique":false,"uneditable":true},"3_newsletter":{"name":"newsletter","type":"checkbox","unique":false,"uneditable":false}}'
 );
 
-define('UM_EMAIL_FROM','noreply@example.com');//email to be used while sending email for verification and .. (email's domain should be same as website domain)
+define(/*UM_DATA*/"UM_PASSWORD_HASH","JEnwNGCVIrPgBgCwNPRD");//DONT TOUCH THIS!!!!
+
 define('UM_VERIFY_EMAIL_EXPIRE',4);//hours
 define('UM_LOGIN_EXPIRE',10);//days. enter 0 for unlimited
 define('UM_PASSWORD_MIN',8);
-define(/*UM_DATA*/"UM_PASSWORD_HASH","6FcAnEobdHmrFomxl3QN");
-define(/*UM_DATA*/"UM_DOMAIN","http://UserManager.example");
 
 function UM_PASSWORD($password){
 	return sha1(UM_PASSWORD_HASH.$password);

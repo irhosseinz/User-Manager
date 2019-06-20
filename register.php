@@ -1,5 +1,6 @@
 <?php
 include_once('includes/config.php');
+include_once('includes/umf.php');
 if(isset($_GET['exist'])){
 	unset($_GET['exist']);
 	reset($_GET);
@@ -23,6 +24,9 @@ if(isset($_GET['exist'])){
 	$st_values=array($_POST['email'],UM_PASSWORD($_POST['password']));
 	$fs=json_decode($UM_CONFIG['FIELDS'],true);
 	try{
+		if(UM_CAPTCHA_SITE && !UM_VerifyCaptcha($_POST['captcha'])){
+			throw new Exception('ARE YOU A BOT??');
+		}
 		foreach($fs as $k=>$v){
 			if($v['required'] && !$_POST[$k]){
 				throw new Exception("please fill {$v['name']}");
@@ -166,8 +170,21 @@ if(@$ERROR){
     <label for="input_password2">Repeat Password</label>
     <input type="password" class="form-control" name="password2" required  id="input_password2"/>
   </div>
-  
+  <input type="hidden" name="captcha" id="captcha"/>
   <?php
+	if(isset($_GET['return'])){
+		echo '<input type="hidden" name="return" value="'.$_GET['return'].'">';
+	}
+	if(UM_CAPTCHA_SITE){
+		echo '<script src="https://www.google.com/recaptcha/api.js?render='.UM_CAPTCHA_SITE.'"></script>
+  <script>
+  grecaptcha.ready(function() {
+      grecaptcha.execute("'.UM_CAPTCHA_SITE.'", {action: "REGISTER"}).then(function(token) {
+         $("#captcha").val(token);
+      });
+  });
+  </script>';
+	}
 	$fs=json_decode($UM_CONFIG['FIELDS'],true);
 	$msgs=json_decode($UM_CONFIG['MSGS'],true);
 	foreach($fs as $k=>$v){
