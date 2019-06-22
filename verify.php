@@ -1,5 +1,6 @@
 <?php
 include_once('includes/config.php');
+include_once('includes/umf.php');
 $SUCCESS=false;
 $ERROR=false;
 $AUTHORIZED=false;
@@ -16,7 +17,7 @@ if(isset($_GET['verify'])){
 	try{
 		if(!$r || $r['used'])
 			throw new Exception('Link is Invalid');
-		if($r['email']!=$_GET['email'] || $r['secret']!=$_GET['code']){
+		if($r['email']!=$_GET['email'] || $r['secret']!==$_GET['code']){
 			$DB->query("update verify set wrong=wrong+1 where _id={$r['_id']}");
 			throw new Exception('Link is Invalid');
 		}

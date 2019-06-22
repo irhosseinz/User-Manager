@@ -36,12 +36,7 @@ $UM_CONFIG=array(
 	,/*UM_DATA*/"FIELDS"=>'{"1_username":{"name":"username","type":"text","unique":true,"uneditable":true},"2_mobile":{"name":"mobile","type":"number","unique":false,"uneditable":true},"3_newsletter":{"name":"newsletter","type":"checkbox","unique":false,"uneditable":false}}'
 );
 
-define(/*UM_DATA*/"UM_PASSWORD_HASH","JEnwNGCVIrPgBgCwNPRD");//DONT TOUCH THIS!!!!
-
 define('UM_VERIFY_EMAIL_EXPIRE',4);//hours
 define('UM_LOGIN_EXPIRE',10);//days. enter 0 for unlimited
 define('UM_PASSWORD_MIN',8);
 
-function UM_PASSWORD($password){
-	return sha1(UM_PASSWORD_HASH.$password);
-}

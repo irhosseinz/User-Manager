@@ -41,7 +41,7 @@ if($_POST){
   `_id` int(11) NOT NULL AUTO_INCREMENT,
   `email` varchar(50) NULL,
   `email_temp` varchar(50) NOT NULL,
-  `password` varchar(70) NOT NULL,
+  `password` varchar(255) NOT NULL,
   `reg_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   {$table}
   PRIMARY KEY (`_id`),
@@ -115,9 +115,6 @@ CREATE TABLE IF NOT EXISTS `verify` (
 	$data=preg_replace('%UM_DATA\*\/"MSGS"[\s\S]+\n%U','UM_DATA*/"MSGS"=>\''.json_encode($msgs).'\''."\n",$data);
 	$data=preg_replace('%UM_DATA\*\/"RULES"[\s\S]+\n%U','UM_DATA*/"RULES"=>\''.json_encode($rules).'\''."\n",$data);
 	$data=preg_replace('%UM_DATA\*\/"FIELDS"[\s\S]+\n%U','UM_DATA*/"FIELDS"=>\''.json_encode($fields).'\''."\n",$data);
-	if($ok){
-		$data=preg_replace('%UM_DATA\*\/"UM_PASSWORD_HASH"[^)]+\)%U','UM_DATA*/"UM_PASSWORD_HASH","'.UM_randomString(20).'")',$data);
-	}
 	if(file_put_contents('../includes/config.php',$data) && $ok){
 		header('Location: finish.html');
 		$DB->close();

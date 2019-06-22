@@ -32,7 +32,7 @@ if(isset($_POST['verify']) || isset($_GET['verify'])){
 	$st=$DB->prepare("select * from users where _id={$_SESSION['UM_DATA']['_id']}");
 	if($st->execute()){
 		$data=$st->get_result()->fetch_assoc();
-		if($data['password']==UM_PASSWORD($_POST['password0'])){
+		if(UM_PASSWORD_VERIFY($_POST['password0'],$data['password'])){
 			$DB->query("update users set password='".UM_PASSWORD($_POST['password'])."' where _id={$_SESSION['UM_DATA']['_id']}");
 			$SUCCESS="Your Password has been Changed";
 		}else{
