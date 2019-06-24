@@ -16,10 +16,7 @@ if you are looking for a simple user manager system, so you can use it in your o
 	<li><b>Secure</b>: All security measures are observed</li>
 	<li><b>Recaptcha Support</b>: You can get <a href="https://www.google.com/recaptcha/admin" target="_blank">Recaptcha V3</a> api Keys and enter it while Installation, so recaptcha will be used in <u>background</u> on login, register and password reset request.</li>
 </ul>
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
 ## Special Thanks
   [@thibaut-decherit](https://github.com/thibaut-decherit) - For security notes
 

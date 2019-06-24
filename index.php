@@ -1,5 +1,5 @@
 /*
-https://irhosseinz.github.io/User-Manager/
+http://h.sandbad.biz/User-Manager/
 */
 
 <?php

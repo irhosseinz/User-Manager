@@ -147,7 +147,7 @@ if($AUTHORIZED){
 
 <hr>
 <footer>
-<p class="text-center text-ltr engFont">&copy; <a href="https://irhosseinz.github.io/User-Manager/" target="_blank">UserManager</a></p>
+<p class="text-center text-ltr engFont">&copy; <a href="http://h.sandbad.biz/User-Manager/" target="_blank">UserManager</a></p>
 </footer>
   </body>
 </html>
