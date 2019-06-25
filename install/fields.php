@@ -116,6 +116,7 @@ CREATE TABLE IF NOT EXISTS `verify` (
 	$data=preg_replace('%UM_DATA\*\/"RULES"[\s\S]+\n%U','UM_DATA*/"RULES"=>\''.json_encode($rules).'\''."\n",$data);
 	$data=preg_replace('%UM_DATA\*\/"FIELDS"[\s\S]+\n%U','UM_DATA*/"FIELDS"=>\''.json_encode($fields).'\''."\n",$data);
 	if(file_put_contents('../includes/config.php',$data) && $ok){
+		file_put_contents('FINISHED',time());
 		header('Location: finish.html');
 		$DB->close();
 		exit;

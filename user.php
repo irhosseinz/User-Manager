@@ -89,8 +89,7 @@ if(isset($_POST['verify']) || isset($_GET['verify'])){
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/dashboard.css" rel="stylesheet">
     <script src="js/jquery-3.4.1.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.bundle.js"></script>
 	 <script src="/js/jquery.validate.min.js"></script>
 <script type="text/javascript">
 $( document ).ready(function(){
@@ -262,16 +261,16 @@ if(@$ERROR){
 		$hint=(isset($msgs[$k])?'<a tabindex="-2" class="badge badge-info" role="button" data-toggle="popover" data-trigger="focus" title="Hint" data-content="'.$msgs[$k].'">?</a>':'');
 		switch($v['type']){
 			case 'email':
-				echo '<label for="input_'.$k.'">'.$v['name'].'</label><input type="email" class="form-control" name="'.$k.'" id="input_'.$k.'" value="'.$DATA[$k].'" placeholder="'.$hint0.'"/>';
+				echo '<label for="input_'.$k.'">'.$v['name'].'</label>'.$hint.'<input type="email" class="form-control" name="'.$k.'" id="input_'.$k.'" value="'.$DATA[$k].'" placeholder="'.$hint0.'"/>';
 				break;
 			case 'number':
-				echo '<label for="input_'.$k.'">'.$v['name'].'</label><input type="number" class="form-control" name="'.$k.'" id="input_'.$k.'" value="'.$DATA[$k].'" placeholder="'.$hint0.'"/>';
+				echo '<label for="input_'.$k.'">'.$v['name'].'</label>'.$hint.'<input type="number" class="form-control" name="'.$k.'" id="input_'.$k.'" value="'.$DATA[$k].'" placeholder="'.$hint0.'"/>';
 				break;
 			case 'checkbox':
-				echo '<div class="form-check"><input type="checkbox" class="form-check-input" name="'.$k.'" id="input_'.$k.'" '.($DATA[$k]?'checked=""':'').'/><label for="input_'.$k.'" class="form-check-label">'.$v['name'].$hint.'</label></div>';
+				echo '<div class="form-check"><input type="checkbox" class="form-check-input" name="'.$k.'" id="input_'.$k.'" '.($DATA[$k]?'checked=""':'').'/><label for="input_'.$k.'" class="form-check-label">'.$v['name'].$hint.'</label>'.$hint.'</div>';
 				break;
 			case 'select':
-				echo '<label for="input_'.$k.'">'.$v['name'].'</label><select class="form-control" name="'.$k.'" id="input_'.$k.'">';
+				echo '<label for="input_'.$k.'">'.$v['name'].'</label>'.$hint.'<select class="form-control" name="'.$k.'" id="input_'.$k.'">';
 				foreach($v['params'] as $p){
 					if(!$p)
 						continue;
@@ -280,7 +279,7 @@ if(@$ERROR){
 				echo '</select>'.$hint;
 				break;
 			default:
-				echo '<label for="input_'.$k.'">'.$v['name'].'</label><input type="text" class="form-control" name="'.$k.'" id="input_'.$k.'" value="'.$DATA[$k].'"/>';
+				echo '<label for="input_'.$k.'">'.$v['name'].'</label>'.$hint.'<input type="text" class="form-control" name="'.$k.'" id="input_'.$k.'" value="'.$DATA[$k].'"/>';
 				break;
 		}
 		echo "</div>\n";

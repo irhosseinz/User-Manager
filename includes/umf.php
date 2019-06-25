@@ -18,7 +18,7 @@ function UM_randomString($len){
 	return $out;
 }
 function UM_PASSWORD($password){
-	return password_hash($password);
+	return password_hash($password,PASSWORD_DEFAULT);
 }
 
 function UM_PASSWORD_VERIFY($password,$hash){

@@ -1,4 +1,8 @@
 <?php
+if(file_exists('FINISHED')){
+	header('finish.html');
+	exit;
+}
 include_once('../includes/umf.php');
 
 ini_set('display_errors',false);
