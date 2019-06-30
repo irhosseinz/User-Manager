@@ -51,6 +51,9 @@ if(isset($_POST['verify']) || isset($_GET['verify'])){
 			if($v['required'] && !$_POST[$k]){
 				throw new Exception("please fill {$v['name']}");
 			}
+			if($v['regex'] && !preg_match('%'.$v['regex'].'%',$_POST[$k])){
+				throw new Exception($v['regexh']?$v['regexh']:'Invalid input');
+			}
 			if($v['uneditable']){
 				continue;
 			}
@@ -164,9 +167,9 @@ $( document ).ready(function(){
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="dashboard_example.php">
                   <span data-feather="file"></span>
-                  Orders
+                  Example
                 </a>
               </li>
               <li class="nav-item">

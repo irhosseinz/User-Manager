@@ -34,7 +34,9 @@ if($_POST){
 			'nget'=>isset($_POST['field'.$i.'_nget'])?true:false,
 			'min'=>$_POST['field'.$i.'_min'],
 			'max'=>$_POST['field'.$i.'_max'],
-			'hint'=>$_POST['field'.$i.'_hint']
+			'hint'=>$_POST['field'.$i.'_hint'],
+			'regex'=>$_POST['field'.$i.'_regex'],
+			'regexh'=>$_POST['field'.$i.'_regexh']
 		);
 	}
 	$ok=$DB->multi_query("CREATE TABLE IF NOT EXISTS `users` (
@@ -70,19 +72,24 @@ CREATE TABLE IF NOT EXISTS `verify` (
   KEY `email` (`email`)
 ) ENGINE=InnoDB;");
 	$rules=array();
-	$msgs=array();
+	$msgs=array();$msgs2=array();
 	$fields=array();
 	foreach($fs as $v){
 		if($v['hint'])
 			$msgs[$v['key']]=$v['hint'];
 		$fields[$v['key']]=array('name'=>$v['name'],'type'=>$v['type']
-			,'unique'=>$v['unique'],'uneditable'=>$v['uneditable'],'nget'=>$v['nget']);
+			,'unique'=>$v['unique'],'uneditable'=>$v['uneditable'],'nget'=>$v['nget'],'regex'=>($v['regex']?$v['regex']:null),'regexh'=>$v['regexh']);
 		$rules[$v['key']]=array();
 		if($v['required'] || $v['uneditable'])
 			$rules[$v['key']]['required']=true;
 		if($v['unique']){
 			$rules[$v['key']]['remote']='register.php?exist';
 			$rules[$v['key']]['required']=true;
+		}
+		if($v['regex']){
+			$rules[$v['key']]['regex']=$v['regex'];
+			if($v['regexh'])
+				$msgs2[$v['key']]['regex']=$v['regexh'];
 		}
 		$min=intval($v['min']);
 		if($min>0)
@@ -112,7 +119,7 @@ CREATE TABLE IF NOT EXISTS `verify` (
 		}
 	}
 	$data=file_get_contents('../includes/config.php');
-	$data=preg_replace('%UM_DATA\*\/"MSGS"[\s\S]+\n%U','UM_DATA*/"MSGS"=>\''.json_encode($msgs).'\''."\n",$data);
+	$data=preg_replace('%UM_DATA\*\/"MSGS"[\s\S]+\n%U','UM_DATA*/"MSGS"=>\''.json_encode($msgs).'\',"MSGS2"=>\''.json_encode($msgs2).'\''."\n",$data);
 	$data=preg_replace('%UM_DATA\*\/"RULES"[\s\S]+\n%U','UM_DATA*/"RULES"=>\''.json_encode($rules).'\''."\n",$data);
 	$data=preg_replace('%UM_DATA\*\/"FIELDS"[\s\S]+\n%U','UM_DATA*/"FIELDS"=>\''.json_encode($fields).'\''."\n",$data);
 	if(file_put_contents('../includes/config.php',$data) && $ok){
@@ -167,6 +174,7 @@ function filterInputs(value,id){
 			$("#field"+id+"max").hide();
 			$("#field"+id+"hint").show();
 			$("#field"+id+"_param").hide();
+			$("#field"+id+"regex").hide();
 			break;
 		case 'select':
 			$("#field"+id+"unique").hide();
@@ -176,6 +184,7 @@ function filterInputs(value,id){
 			$("#field"+id+"max").hide();
 			$("#field"+id+"hint").show();
 			$("#field"+id+"_param").show();
+			$("#field"+id+"regex").hide();
 			break;
 		case 'checkbox':
 			$("#field"+id+"unique").hide();
@@ -185,6 +194,17 @@ function filterInputs(value,id){
 			$("#field"+id+"max").hide();
 			$("#field"+id+"hint").show();
 			$("#field"+id+"_param").hide();
+			$("#field"+id+"regex").hide();
+			break;
+		case 'text':
+			$("#field"+id+"unique").show();
+			$("#field"+id+"uneditable").show();
+			$("#field"+id+"required").show();
+			$("#field"+id+"min").show();
+			$("#field"+id+"max").show();
+			$("#field"+id+"hint").show();
+			$("#field"+id+"_param").hide();
+			$("#field"+id+"regex").show();
 			break;
 		default:
 			$("#field"+id+"unique").show();
@@ -194,6 +214,7 @@ function filterInputs(value,id){
 			$("#field"+id+"max").show();
 			$("#field"+id+"hint").show();
 			$("#field"+id+"_param").hide();
+			$("#field"+id+"regex").hide();
 			break;
 	}
 }
@@ -219,6 +240,11 @@ function addField(){
 '			<option value="checkbox">Checkbox</option>'+
 '		</select>'+
 '		<input type="text" class="my-2 form-control" placeholder="option1,option2,.." id="field'+field_id+'_param" name="field'+field_id+'_param" style="display:none"/>'+
+'		</div>'+
+'		<div class="col-auto"  id="field'+field_id+'regex" >'+
+'		<label class="my-2" for="inlineFormInput">Regex Format<a tabindex="-2" class="badge badge-info" role="button" data-toggle="popover" data-trigger="focus" title="Hint" data-content="Enter a regex for data validation.\nenter regex in first field, in second field enter an error text in case user entered something that does not match regex\n\n⚠️ Don\'t touch this if you are not familiar with regex!">?</a></label>'+
+'		<input type="text" class="form-control mb-2" name="field'+field_id+'_regex" placeholder="Example: ^[a-zA-Z0-9]+$">'+
+'		<input type="text" class="form-control mb-2" name="field'+field_id+'_regexh" placeholder="Regex Error">'+
 '		</div>'+
 '		<div class="col-auto" id="field'+field_id+'nget">'+
 '		<label class="my-2" for="inlineFormInput">Not in Registeration<a tabindex="-2" class="badge badge-info" role="button" data-toggle="popover" data-trigger="focus" title="Hint" data-content="check this if you don\'t want to get this data on registeration">?</a></label>'+

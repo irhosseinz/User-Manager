@@ -31,6 +31,9 @@ if(isset($_GET['exist'])){
 			if($v['required'] && !$_POST[$k]){
 				throw new Exception("please fill {$v['name']}");
 			}
+			if($v['regex'] && !preg_match('%'.$v['regex'].'%',$_POST[$k])){
+				throw new Exception($v['regexh']?$v['regexh']:'Invalid input');
+			}
 			$query.=",{$k}=?";
 			$st_type.='s';
 			$st_values[]=$_POST[$k];
@@ -76,8 +79,16 @@ if(isset($_GET['exist'])){
 <link rel="shortcut icon" href="/img/favicon.png" />
 <script type="text/javascript">
 $( document ).ready(function(){
+	jQuery.validator.addMethod(
+		"regex",
+		function(value, element, regexp) {
+			var re = new RegExp(regexp);
+			return this.optional(element) || re.test(value);
+		},
+		"Entered data does not match required format"
+	);
 	jQuery.validator.messages.remote = 'This value is already registered';
-	var msgs={};
+	var msgs=<?php echo $UM_CONFIG['MSGS2'];?>;
 	msgs.accept='You should accept Terms of Service';
 	msgs.email={
 		remote:'This email is already registered'

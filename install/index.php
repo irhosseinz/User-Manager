@@ -1,6 +1,6 @@
 <?php
 if(file_exists('FINISHED')){
-	header('finish.html');
+	header('Location: finish.html');
 	exit;
 }
 include_once('../includes/umf.php');
