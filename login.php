@@ -16,7 +16,7 @@ if(isset($_POST['forget'])){
 		$ERROR='ARE YOU A BOT??';
 	}else{
 		$st=$DB->prepare("select * from users where email=? or email_temp=? order by email!=? limit 1");
-		$st->bind_param('ss',$_POST['forget'],$_POST['forget'],$_POST['forget']);
+		$st->bind_param('sss',$_POST['forget'],$_POST['forget'],$_POST['forget']);
 		if($st->execute() && $r=$st->get_result()->fetch_assoc()){
 			$st=$DB->prepare("insert into verify set user_id=?,email=?,secret=?,action=?");
 			$p=UM_randomString(rand(30,50));
@@ -34,7 +34,7 @@ if(isset($_POST['forget'])){
 					$ERROR="An error occured on sending Email";
 			}
 		}else
-			$SUCCESS="This email is not a registered Email";	
+			$ERROR="This email is not a registered Email".$DB->error;	
 	}
 }else if(isset($_POST['email'])){
 	try{
@@ -44,7 +44,7 @@ if(isset($_POST['forget'])){
 		$e=",expire=TIMESTAMPADD(DAY,".(UM_LOGIN_EXPIRE>0?UM_LOGIN_EXPIRE:365).",NOW())";
 		$p=UM_randomString(rand(30,40));
 		$st=$DB->prepare("select * from users where email=? or email_temp=? order by email!=? limit 1");
-		$st->bind_param('ss',$_POST['email'],$_POST['email'],$_POST['email']);
+		$st->bind_param('sss',$_POST['email'],$_POST['email'],$_POST['email']);
 		if($st->execute()){
 			$data=$st->get_result()->fetch_assoc();
 			if(UM_PASSWORD_VERIFY($_POST['password'],$data['password'])){
@@ -164,7 +164,7 @@ if(isset($_GET['forget'])){
 		echo '<script src="https://www.google.com/recaptcha/api.js?render='.UM_CAPTCHA_SITE.'"></script>
   <script>
   grecaptcha.ready(function() {
-      grecaptcha.execute("'.UM_CAPTCHA_SITE.'", {action: "RESET PASSWORD"}).then(function(token) {
+      grecaptcha.execute("'.UM_CAPTCHA_SITE.'", {action: "RESET_PASSWORD"}).then(function(token) {
          $("#captcha").val(token);
       });
   });
