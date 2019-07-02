@@ -15,8 +15,8 @@ if(isset($_POST['forget'])){
 	if(UM_CAPTCHA_SITE && !UM_VerifyCaptcha($_POST['captcha'])){
 		$ERROR='ARE YOU A BOT??';
 	}else{
-		$st=$DB->prepare("select * from users where email=? or email_temp=?");
-		$st->bind_param('ss',$_POST['forget'],$_POST['forget']);
+		$st=$DB->prepare("select * from users where email=? or email_temp=? order by email!=? limit 1");
+		$st->bind_param('ss',$_POST['forget'],$_POST['forget'],$_POST['forget']);
 		if($st->execute() && $r=$st->get_result()->fetch_assoc()){
 			$st=$DB->prepare("insert into verify set user_id=?,email=?,secret=?,action=?");
 			$p=UM_randomString(rand(30,50));
@@ -32,7 +32,7 @@ if(isset($_POST['forget'])){
 					$SUCCESS="An Link containing Password-Reset link sent to Your Email ({$email}).";
 				else
 					$ERROR="An error occured on sending Email";
-			}
+			} order by email!=? limit 1
 		}else
 			$SUCCESS="This email is not a registered Email";	
 	}
@@ -43,8 +43,8 @@ if(isset($_POST['forget'])){
 		}
 		$e=",expire=TIMESTAMPADD(DAY,".(UM_LOGIN_EXPIRE>0?UM_LOGIN_EXPIRE:365).",NOW())";
 		$p=UM_randomString(rand(30,40));
-		$st=$DB->prepare("select * from users where email=? or email_temp=?");
-		$st->bind_param('ss',$_POST['email'],$_POST['email']);
+		$st=$DB->prepare("select * from users where email=? or email_temp=? order by email!=? limit 1");
+		$st->bind_param('ss',$_POST['email'],$_POST['email'],$_POST['email']);
 		if($st->execute()){
 			$data=$st->get_result()->fetch_assoc();
 			if(UM_PASSWORD_VERIFY($_POST['password'],$data['password'])){
