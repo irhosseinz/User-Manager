@@ -32,7 +32,7 @@ if(isset($_POST['forget'])){
 					$SUCCESS="An Link containing Password-Reset link sent to Your Email ({$email}).";
 				else
 					$ERROR="An error occured on sending Email";
-			} order by email!=? limit 1
+			}
 		}else
 			$SUCCESS="This email is not a registered Email";	
 	}
