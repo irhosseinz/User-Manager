@@ -15,6 +15,7 @@ if(isset($_POST['forget'])){
 	if(UM_CAPTCHA_SITE && !UM_VerifyCaptcha($_POST['captcha'])){
 		$ERROR='ARE YOU A BOT??';
 	}else{
+		$_POST['forget']=strtolower($_POST['forget']);
 		$st=$DB->prepare("select * from users where email=? or email_temp=? order by email!=? limit 1");
 		$st->bind_param('sss',$_POST['forget'],$_POST['forget'],$_POST['forget']);
 		if($st->execute() && $r=$st->get_result()->fetch_assoc()){
@@ -41,6 +42,7 @@ if(isset($_POST['forget'])){
 		if(UM_CAPTCHA_SITE && !UM_VerifyCaptcha($_POST['captcha'])){
 			throw new Exception('ARE YOU A BOT??');
 		}
+		$_POST['email']=strtolower($_POST['email']);
 		$e=",expire=TIMESTAMPADD(DAY,".(UM_LOGIN_EXPIRE>0?UM_LOGIN_EXPIRE:365).",NOW())";
 		$p=UM_randomString(rand(30,40));
 		$st=$DB->prepare("select * from users where email=? or email_temp=? order by email!=? limit 1");
@@ -153,6 +155,7 @@ if(@$ERROR){
 }
 if(isset($_GET['forget'])){
 ?>
+<h1>Reset Password</h1>
 <form id="form" action="login.php" method="post">
   <div class="form-group">
     <label for="input_email">Email address</label>
@@ -176,6 +179,7 @@ if(isset($_GET['forget'])){
 <?php
 }else{
 ?>
+<h1>Login Form</h1>
 <form id="form" action="login.php" method="post">
   <div class="form-group">
     <label for="input_email">Email address</label>

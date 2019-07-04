@@ -19,6 +19,7 @@ if(isset($_GET['exist'])){
 	$DB->close();
 	exit;
 }else if(isset($_POST['email'])){
+	$_POST['email']=strtolower($_POST['email']);
 	$query="insert into users set email_temp=?,password=?";
 	$st_type='ss';
 	$st_values=array($_POST['email'],UM_PASSWORD($_POST['password']));
@@ -161,6 +162,7 @@ $( document ).ready(function(){
 </nav>
 
 <div class="container">
+<h1>Registeration Form</h1>
 <?php
 if(@$ERROR){
 	echo '<div class="alert alert-danger" role="alert">'.$ERROR.'</div>';
