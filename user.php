@@ -163,44 +163,44 @@ $( document ).ready(function(){
               <li class="nav-item">
                 <a class="nav-link active" href="#">
                   <span data-feather="user"></span>
-                  <span class="d-none">Profile</span> <span class="sr-only">(current)</span>
+                  <span class="d-none d-md-inline">Profile</span> <span class="sr-only">(current)</span>
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="dashboard_example.php">
                   <span data-feather="file"></span>
-                  <span class="d-none">Example</span>
+                  <span class="d-none d-md-inline">Example</span>
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#">
                   <span data-feather="shopping-cart"></span>
-                  <span class="d-none">Products</span>
+                  <span class="d-none d-md-inline">Products</span>
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#">
                   <span data-feather="users"></span>
-                  <span class="d-none">Customers</span>
+                  <span class="d-none d-md-inline">Customers</span>
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#">
                   <span data-feather="bar-chart-2"></span>
-                  <span class="d-none">Reports</span>
+                  <span class="d-none d-md-inline">Reports</span>
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#">
                   <span data-feather="layers"></span>
-                  <span class="d-none">Integrations</span>
+                  <span class="d-none d-md-inline">Integrations</span>
                 </a>
               </li>
             </ul>
           </div>
         </nav>
 
-        <main role="main" class="col-md-9 col-sm-11 offset-sm-1 col-11 offset-1 pt-3 px-4">
+        <main role="main" class="col-md-9 offset-md-2 col-sm-11 offset-sm-1 col-11 offset-1 pt-3 px-4">
           <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
 <?php
 $DATA=$DB->query("select * from users where _id={$_SESSION['UM_DATA']['_id']}")->fetch_assoc();
