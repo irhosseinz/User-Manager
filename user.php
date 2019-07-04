@@ -147,7 +147,7 @@ $( document ).ready(function(){
 
   <body>
     <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
-      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#"><?php echo $UM_CONFIG['TITLE'];?></a>
+      <a class="navbar-brand col-sm-3 col-md-2 col-4 mr-0" href="#"><?php echo $UM_CONFIG['TITLE'];?></a>
       <ul class="navbar-nav px-3">
         <li class="nav-item text-nowrap">
           <a class="nav-link" href="login.php?logout">Sign out</a>
@@ -157,50 +157,50 @@ $( document ).ready(function(){
 
     <div class="container-fluid">
       <div class="row">
-        <nav class="col-md-2 d-none d-md-block bg-light sidebar" style="top:48px">
+        <nav class="col-md-2 col-sm-1 col-1 d-inline d-md-block bg-light sidebar" style="top:48px">
           <div class="sidebar-sticky">
             <ul class="nav flex-column">
               <li class="nav-item">
                 <a class="nav-link active" href="#">
                   <span data-feather="user"></span>
-                  Profile <span class="sr-only">(current)</span>
+                  <span class="d-none">Profile</span> <span class="sr-only">(current)</span>
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="dashboard_example.php">
                   <span data-feather="file"></span>
-                  Example
+                  <span class="d-none">Example</span>
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#">
                   <span data-feather="shopping-cart"></span>
-                  Products
+                  <span class="d-none">Products</span>
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#">
                   <span data-feather="users"></span>
-                  Customers
+                  <span class="d-none">Customers</span>
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#">
                   <span data-feather="bar-chart-2"></span>
-                  Reports
+                  <span class="d-none">Reports</span>
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#">
                   <span data-feather="layers"></span>
-                  Integrations
+                  <span class="d-none">Integrations</span>
                 </a>
               </li>
             </ul>
           </div>
         </nav>
 
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+        <main role="main" class="col-md-9 col-sm-11 offset-sm-1 col-11 offset-1 pt-3 px-4">
           <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
 <?php
 $DATA=$DB->query("select * from users where _id={$_SESSION['UM_DATA']['_id']}")->fetch_assoc();
