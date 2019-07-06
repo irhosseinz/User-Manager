@@ -9,7 +9,7 @@ if(isset($_GET['exist'])){
 		$DB->close();
 		die('false');
 	}
-	$st=$DB->prepare("select _id from users where {$k}=?");
+	$st=$DB->prepare("select _id from users where LOWER({$k})=?");
 	$st->bind_param('s',$_GET[$k]);
 	if($st->execute() && !$st->fetch()){
 		echo 'true';
@@ -35,6 +35,9 @@ if(isset($_GET['exist'])){
 			if($v['regex'] && !preg_match('%'.$v['regex'].'%',$_POST[$k])){
 				throw new Exception($v['regexh']?$v['regexh']:'Invalid input');
 			}
+//			if($v['unique']){
+//				$_POST[$k]=strtolower($_POST[$k]);
+//			}
 			$query.=",{$k}=?";
 			$st_type.='s';
 			$st_values[]=$_POST[$k];
