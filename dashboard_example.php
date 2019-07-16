@@ -52,6 +52,18 @@ $( document ).ready(function(){
                   <span class="d-none d-md-inline">Profile</span>
                 </a>
               </li>
+              <?php
+              if($_SESSION['perm']['admin']){
+              ?>
+              <li class="nav-item">
+                <a class="nav-link" href="admin.php">
+                  <span data-feather="star"></span>
+                  <span class="d-none d-md-inline">Admin</span>
+                </a>
+              </li>
+              <?php
+              }
+              ?>
               <li class="nav-item">
                 <a class="nav-link active" href="#">
                   <span data-feather="file"></span>

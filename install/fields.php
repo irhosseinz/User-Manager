@@ -45,6 +45,7 @@ if($_POST){
   `email_temp` varchar(50) NOT NULL,
   `password` varchar(255) NOT NULL,
   `reg_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `perm` int(11) NOT NULL DEFAULT 0,
   {$table}
   PRIMARY KEY (`_id`),
   UNIQUE KEY `email` (`email`),

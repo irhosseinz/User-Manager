@@ -22,6 +22,8 @@ if(!isset($_SESSION['UM_DATA']) && isset($_COOKIE['UM_LOGIN'])){
 	$r=$DB->query("select *,UNIX_TIMESTAMP(expire) as e from login_log where _id=".intval($c[0]))->fetch_assoc();
 	if($r['e']>time() && $r['secret']==$c[1]){
 		$_SESSION['UM_DATA']=array('_id'=>$r['user_id']);
+		$r=$DB->query("select perm from users where _id=".intval($r['user_id']))->fetch_assoc();
+		$_SESSION['UM_DATA']['perm']=decodeConfig($r['perm']);
 	}else{
 		setcookie('UM_LOGIN','',-1);
 	}

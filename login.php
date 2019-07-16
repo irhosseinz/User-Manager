@@ -54,6 +54,7 @@ if(isset($_POST['forget'])){
 				$DB->query("insert into login_log set user_id={$data['_id']}{$e},secret='{$p}'");
 				$cookie="{$DB->insert_id}_{$p}";
 				$_SESSION['UM_DATA']=array('_id'=>$data['_id'],'cookie'=>$cookie);
+				$_SESSION['UM_DATA']['perm']=decodeConfig($data['perm']);
 				if(isset($_POST['remember'])){
 					setcookie('UM_LOGIN',$cookie,array('expires'=>time()+((UM_LOGIN_EXPIRE>0?UM_LOGIN_EXPIRE:365)*24*3600),'httponly'=>true));
 				}

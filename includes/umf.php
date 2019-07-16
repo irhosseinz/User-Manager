@@ -38,4 +38,24 @@ function UM_VerifyCaptcha($response){
 	curl_close($ch);
 	return @$json['success'];
 }
+function decodeConfig($c){
+	$c=intval($c);
+	return array(
+		'admin'=>((($c&1)>>0)==1)
+		,'edit_admin'=>((($c&2)>>1)==1)
+		,'edit_password'=>((($c&4)>>2)==1)
+	);
+}
+function encodeConfig($setting){
+	if(!$setting)
+		return 0;
+	$o=0;
+	if($setting['admin'])
+		$o+=(1);
+	if($setting['edit_admin'])
+		$o+=(2);
+	if($setting['edit_password'])
+		$o+=(4);
+	return $o;
+}
 ?>

@@ -166,6 +166,18 @@ $( document ).ready(function(){
                   <span class="d-none d-md-inline">Profile</span> <span class="sr-only">(current)</span>
                 </a>
               </li>
+              <?php
+              if($_SESSION['UM_DATA']['perm']['admin']){
+              ?>
+              <li class="nav-item">
+                <a class="nav-link" href="admin.php">
+                  <span data-feather="star"></span>
+                  <span class="d-none d-md-inline">Admin</span>
+                </a>
+              </li>
+              <?php
+              }
+              ?>
               <li class="nav-item">
                 <a class="nav-link" href="dashboard_example.php">
                   <span data-feather="file"></span>
@@ -230,22 +242,6 @@ if(@$ERROR){
 		}
   ?>
 </form>
-<form id="regForm1" action="user.php" method="post">
-  <hr/><h4>Change Password:</h4>
-  <div class="form-group">
-    <label for="input_password">Old Password</label>
-    <input type="password" class="form-control" name="password0" id="input_password0"/>
-  </div>
-  <div class="form-group">
-    <label for="input_password">New Password</label>
-    <input type="password" class="form-control" name="password" id="input_password"/>
-  </div>
-  <div class="form-group">
-    <label for="input_password2">Repeat New Password</label>
-    <input type="password" class="form-control" name="password2"  id="input_password2"/>
-  </div>
-  <br/><input type="submit" class="btn btn-primary my-1" value="Change" name="change"/>
-</form>
 <form id="regForm2" action="user.php" method="post">
   <hr/>
   
@@ -290,6 +286,22 @@ if(@$ERROR){
 		echo '<br/><input type="submit" class="btn btn-primary my-1" value="Save" name="save"/>';
 	}
   ?>
+</form>
+<form id="regForm1" action="user.php" method="post">
+  <hr/><h4>Change Password:</h4>
+  <div class="form-group">
+    <label for="input_password">Old Password</label>
+    <input type="password" class="form-control" name="password0" id="input_password0"/>
+  </div>
+  <div class="form-group">
+    <label for="input_password">New Password</label>
+    <input type="password" class="form-control" name="password" id="input_password"/>
+  </div>
+  <div class="form-group">
+    <label for="input_password2">Repeat New Password</label>
+    <input type="password" class="form-control" name="password2"  id="input_password2"/>
+  </div>
+  <br/><input type="submit" class="btn btn-primary my-1" value="Change" name="change"/>
 </form>
 </div>
           </div>
