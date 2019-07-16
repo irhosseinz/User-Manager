@@ -167,15 +167,17 @@ if(isset($_GET['forget'])){
 	if(UM_CAPTCHA_SITE){
 		echo '<script src="https://www.google.com/recaptcha/api.js?render='.UM_CAPTCHA_SITE.'"></script>
   <script>
+  $("#submit").attr("disabled",true);
   grecaptcha.ready(function() {
       grecaptcha.execute("'.UM_CAPTCHA_SITE.'", {action: "RESET_PASSWORD"}).then(function(token) {
          $("#captcha").val(token);
+         $("#submit").attr("disabled",false);
       });
   });
   </script>';
 	}
   ?>
-  <br/><button type="submit" class="btn btn-primary my-1">Submit</button>
+  <br/><button type="submit" class="btn btn-primary my-1" id="submit">Submit</button>
 </form>
 <?php
 }else{
@@ -202,15 +204,17 @@ if(isset($_GET['forget'])){
 	if(UM_CAPTCHA_SITE){
 		echo '<script src="https://www.google.com/recaptcha/api.js?render='.UM_CAPTCHA_SITE.'"></script>
   <script>
+   $("#submit").attr("disabled",true);
   grecaptcha.ready(function() {
       grecaptcha.execute("'.UM_CAPTCHA_SITE.'", {action: "LOGIN"}).then(function(token) {
          $("#captcha").val(token);
+         $("#submit").attr("disabled",false);
       });
   });
   </script>';
 	}
   ?>
-  <br/><button type="submit" class="btn btn-primary my-1">Submit</button>
+  <br/><button type="submit" class="btn btn-primary my-1" id="submit">Submit</button>
   <br/><a href="login.php?forget"><span class="badge badge-warning">I Forgot my Password</span></a>
 </form>
 <?php
