@@ -163,6 +163,7 @@ if(isset($_GET['forget'])){
     <input type="email" class="form-control" name="forget" required id="input_email"/>
   </div>
   <input type="hidden" name="captcha" id="captcha"/>
+  <br/><button type="submit" class="btn btn-primary my-1">Submit</button>
   <?php
 	if(UM_CAPTCHA_SITE){
 		echo '<script src="https://www.google.com/recaptcha/api.js?render='.UM_CAPTCHA_SITE.'"></script>
@@ -177,7 +178,6 @@ if(isset($_GET['forget'])){
   </script>';
 	}
   ?>
-  <br/><button type="submit" class="btn btn-primary my-1" id="submit">Submit</button>
 </form>
 <?php
 }else{
@@ -201,6 +201,9 @@ if(isset($_GET['forget'])){
 	if(isset($_GET['return'])){
 		echo '<input type="hidden" name="return" value="'.$_GET['return'].'">';
 	}
+	?>
+  <br/><button type="submit" class="btn btn-primary my-1" id="submit">Submit</button>
+	<?php
 	if(UM_CAPTCHA_SITE){
 		echo '<script src="https://www.google.com/recaptcha/api.js?render='.UM_CAPTCHA_SITE.'"></script>
   <script>
@@ -214,7 +217,6 @@ if(isset($_GET['forget'])){
   </script>';
 	}
   ?>
-  <br/><button type="submit" class="btn btn-primary my-1" id="submit">Submit</button>
   <br/><a href="login.php?forget"><span class="badge badge-warning">I Forgot my Password</span></a>
 </form>
 <?php

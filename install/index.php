@@ -1,6 +1,6 @@
 <?php
 if(file_exists('FINISHED')){
-	header('Location: finish.html');
+	header('Location: finish.php');
 	exit;
 }
 include_once('../includes/umf.php');
@@ -9,6 +9,7 @@ ini_set('display_errors',false);
 if(isset($_GET['error'])){
 	$ERROR=$_GET['error'];
 }
+session_start();
 
 if($_POST){
 	$data=file_get_contents('../includes/config.php');
@@ -27,6 +28,7 @@ if($_POST){
 	$db.="\n\ndefine('UM_DOMAIN','{$d}');";
 	$db.="\ndefine('UM_EMAIL_FROM','{$_POST['email']}');";
 	$data=preg_replace('%UM_CONFIG\*\/[\s\S]+\/\*UM_CONFIG%',"UM_CONFIG*/\n{$db}\n/*UM_CONFIG",$data);
+	$_SESSION['email_admin']=strtolower($_POST['email_admin']);
 	if(file_put_contents('../includes/config.php',$data)){
 		header('Location: fields.php');
 		exit;
@@ -94,6 +96,10 @@ $( document ).ready(function(){
   <div class="form-group">
     <label for="input_email">An email from above domain for using when sending Email to Users:</label>
     <input type="email" class="form-control" name="email" required id="input_email" required placeholder="noreply@example.com"/>
+  </div>
+  <div class="form-group">
+    <label for="input_emaila">Enter Your personal email, this is used for creating a administrator user:</label>
+    <input type="email" class="form-control" name="email_admin" required id="input_emaila" required placeholder="noreply@example.com"/>
   </div>
   <div class="form-group">
     <label for="input_captcha1">If you want Recaptcha to be used for login and Registration and.. get a <a href="https://www.google.com/recaptcha/admin" target="_blank">Recaptcha V3</a> and enter it here. (Don't forget to add your domain there!)</label>

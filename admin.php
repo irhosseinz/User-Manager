@@ -12,7 +12,7 @@ if(!$_SESSION['UM_DATA']['perm']['admin']){
 $SUCCESS=false;
 $ERROR=false;
 if(isset($_GET['list'])){
-	$q=$DB->query("select * from users order by _id desc limit ".intval($_GET['list']).",1");
+	$q=$DB->query("select * from users order by _id desc limit ".intval($_GET['list']).",10");
 	if(!$q){
 		echo $DB->error;
 	}

@@ -45,7 +45,7 @@ if($_POST){
   `email_temp` varchar(50) NOT NULL,
   `password` varchar(255) NOT NULL,
   `reg_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `perm` int(11) NOT NULL DEFAULT 0,
+  `perm` int(4) NOT NULL DEFAULT 0,
   {$table}
   PRIMARY KEY (`_id`),
   UNIQUE KEY `email` (`email`),
@@ -72,6 +72,10 @@ CREATE TABLE IF NOT EXISTS `verify` (
   PRIMARY KEY (`_id`),
   KEY `email` (`email`)
 ) ENGINE=InnoDB;");
+	$password=UM_randomString(8);
+	if($_SESSION['email_admin'] && $DB->query("INSERT INTO users set email_temp='{$_SESSION['email_admin']}',password='".UM_PASSWORD($password)."'")){
+		$_SESSION['UM_ADMIN']=array($_SESSION['email_admin'],$password);
+	}
 	$rules=array();
 	$msgs=array();$msgs2=array();
 	$fields=array();
@@ -125,7 +129,7 @@ CREATE TABLE IF NOT EXISTS `verify` (
 	$data=preg_replace('%UM_DATA\*\/"FIELDS"[\s\S]+\n%U','UM_DATA*/"FIELDS"=>\''.json_encode($fields).'\''."\n",$data);
 	if(file_put_contents('../includes/config.php',$data) && $ok){
 		file_put_contents('FINISHED',time());
-		header('Location: finish.html');
+		header('Location: finish.php');
 		$DB->close();
 		exit;
 	}else{
