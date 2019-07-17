@@ -184,7 +184,7 @@ $DATA=$DB->query("select * from users where _id={$_SESSION['UM_DATA']['_id']}")-
     <script src="js/feather.min.js"></script>
     <script type="text/javascript">
 		$( document ).ready(function(){
-			A=new Admin(<?php echo $UM_CONFIG['FIELDS'];?>);
+			A=new Admin(<?php echo $UM_CONFIG['FIELDS'].','.json_encode($_SESSION['UM_DATA']['perm']);?>);
 			A.getUsers(0);
 			$('[data-toggle="popover"]').popover();
 		});

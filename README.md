@@ -24,6 +24,10 @@ You can add as many extra data fields for user, based on your project. for each 
 
 
 ## Main Features
+* __Administrator__: There is an Administrator panel with these capabilities
+	* View All Users and Their Data
+	* Reset a User's password
+	* Grant Administrator Permissions to other users
 * __Fully Customizable__: There is an installation script that you can configure Website Title, domain, email(that is used while sending emails) AND user properties in the way you want
 ![install](https://raw.githubusercontent.com/irhosseinz/User-Manager/master/install/screen_shots/install.png)
 ![install_fields](https://raw.githubusercontent.com/irhosseinz/User-Manager/master/install/screen_shots/install_fields.png)

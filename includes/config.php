@@ -30,6 +30,12 @@ if(!isset($_SESSION['UM_DATA']) && isset($_COOKIE['UM_LOGIN'])){
 }
 
 
+$UM_PERM=array(//special permissions (add anything and it will be in $_SESSION['UM_DATA']['perm'] as a boolean with the key you specify here)
+	'admin'
+	,'edit_admin'
+	,'edit_password'
+);
+
 $UM_CONFIG=array(
 	/*UM_DATA*/"TITLE"=>'User Manager'
 	,/*UM_DATA*/"LANG"=>'EN'//msg me if you want another language

@@ -1,4 +1,5 @@
 <?php
+include_once(__DIR__.'/config.php');
 function UM_randomString($len){
 	$string = '1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM';
 	$length=strlen($string);
@@ -39,23 +40,25 @@ function UM_VerifyCaptcha($response){
 	return @$json['success'];
 }
 function decodeConfig($c){
+	global $UM_PERM;
 	$c=intval($c);
-	return array(
-		'admin'=>((($c&1)>>0)==1)
-		,'edit_admin'=>((($c&2)>>1)==1)
-		,'edit_password'=>((($c&4)>>2)==1)
-	);
+	$o=array();
+	foreach($UM_PERM as $k=>$v){
+		$k=intval($k);
+		$o[$k]=((($c&pow(2,$k))>>$k)==1);
+	}
+	return $o;
 }
 function encodeConfig($setting){
 	if(!$setting)
 		return 0;
+	global $UM_PERM;
 	$o=0;
-	if($setting['admin'])
-		$o+=(1);
-	if($setting['edit_admin'])
-		$o+=(2);
-	if($setting['edit_password'])
-		$o+=(4);
+	foreach($UM_PERM as $k=>$v){
+		$k=intval($k);
+		if($setting[$v])
+			$o+=pow(2,$k);
+	}
 	return $o;
 }
 ?>

@@ -1,6 +1,7 @@
 var A;
-function Admin(fs){
+function Admin(fs,perm){
 	this.fs=fs;
+	this.perm=perm;
 }
 Admin.prototype.prev = function() {
 	this.getUsers(this.list_prev);
@@ -34,6 +35,18 @@ Admin.prototype.modal_click = function() {
 		default:
 			break;
 	}
+}
+Admin.prototype.view = function(i) {
+	var u=this.user_data[i];
+	$('#modal_action').attr("disabled", true);
+	$('#modal_title').text('Viewing User #'+u._id);
+	var html='<p><b>Email:</b>'+(u.email?u.email+" (verified)":u.email_temp+" (unverified)")+"<br/>";
+	for(var i in this.fs){
+		html+='<b>'+this.fs[i].name+':</b>'+u[i]+"<br/>";
+	}
+	html+='</p>';
+	$('#modal_body').html(html);
+	$('#modal').modal()
 }
 Admin.prototype.password = function(i) {
 	var u=this.user_data[i];
@@ -90,7 +103,14 @@ Admin.prototype.getUsers = function(i) {
 					continue;
 				html+='<td class="align-middle">'+data[j][k]+'</td>';
 			}
-			html+='<td class="align-middle"><a class="btn btn-info m-1" onclick="A.admin('+j+')"><span data-feather="unlock" color="#ffffff" stroke-width="3"></span></a><a class="btn btn-warning m-1" onclick="A.password('+j+')"><span data-feather="key" color="#ffffff" stroke-width="3"></span></a></td></tr>'
+			html+='<td class="align-middle"><a class="btn btn-primary m-1" onclick="A.view('+j+')"><span data-feather="eye" color="#ffffff" stroke-width="3"></span></a>';
+			if(self.perm.edit_admin){
+				html+='<a class="btn btn-info m-1" onclick="A.admin('+j+')"><span data-feather="unlock" color="#ffffff" stroke-width="3"></span></a>';
+			}
+			if(self.perm.edit_password){
+				html+='<a class="btn btn-warning m-1" onclick="A.password('+j+')"><span data-feather="key" color="#ffffff" stroke-width="3"></span></a>';
+			}
+			html+='</td></tr>';
 			$('#users').append(html);
 		}
       feather.replace();
