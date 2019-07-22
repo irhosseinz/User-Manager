@@ -20,6 +20,7 @@ if(isset($_GET['list'])){
 	while($r=$q->fetch_assoc()){
 		unset($r['password']);
 		$r['perm']=decodeConfig($r['perm']);
+		$r['ref_link']=UM_DOMAIN.sprintf(UM_REFERRAL_FORMAT,$r['_id']);
 		$o[]=$r;
 	}
 	echo json_encode($o);
@@ -63,7 +64,7 @@ if(isset($_GET['list'])){
     <script src="js/jquery-3.4.1.min.js"></script>
     <script src="js/bootstrap.bundle.js"></script>
 	 <script src="/js/jquery.validate.min.js"></script>
-<script type="text/javascript" src="js/admin.js"></script>
+<script type="text/javascript" src="js/admin.js?v=1.31"></script>
 </head>
 <body>
 <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -97,48 +98,9 @@ if(isset($_GET['list'])){
         <nav class="col-md-2 col-sm-1 col-1 d-inline d-md-block bg-light sidebar" style="top:48px">
           <div class="sidebar-sticky">
             <ul class="nav flex-column">
-              <li class="nav-item">
-                <a class="nav-link" href="user.php">
-                  <span data-feather="user"></span>
-                  <span class="d-none d-md-inline">Profile</span>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link active" href="#">
-                  <span data-feather="star"></span>
-                  <span class="d-none d-md-inline">Admin</span> <span class="sr-only">(current)</span>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="dashboard_example.php">
-                  <span data-feather="file"></span>
-                  <span class="d-none d-md-inline">Example</span>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  <span data-feather="shopping-cart"></span>
-                  <span class="d-none d-md-inline">Products</span>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  <span data-feather="users"></span>
-                  <span class="d-none d-md-inline">Customers</span>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  <span data-feather="bar-chart-2"></span>
-                  <span class="d-none d-md-inline">Reports</span>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  <span data-feather="layers"></span>
-                  <span class="d-none d-md-inline">Integrations</span>
-                </a>
-              </li>
+            <?php
+            	include('includes/dashboard_sidebar.php');
+            ?>
             </ul>
           </div>
         </nav>
@@ -161,7 +123,7 @@ $DATA=$DB->query("select * from users where _id={$_SESSION['UM_DATA']['_id']}")-
 			if($v['nget'])
 				continue;
 			$fs_ids[]=$k;
-			echo '<th scope="col">'.$v['name'].'</th>';
+//			echo '<th scope="col">'.$v['name'].'</th>';
 		}
 		?>
 		<th scope="col"></th>

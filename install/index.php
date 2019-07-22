@@ -27,6 +27,7 @@ if($_POST){
 	}else $d='';
 	$db.="\n\ndefine('UM_DOMAIN','{$d}');";
 	$db.="\ndefine('UM_EMAIL_FROM','{$_POST['email']}');";
+	$db.="\n\ndefine('UM_REFERRAL_ACTIVE',".(isset($_POST['referral'])?'true':'false').");//activates referral system in user dashboard";
 	$data=preg_replace('%UM_CONFIG\*\/[\s\S]+\/\*UM_CONFIG%',"UM_CONFIG*/\n{$db}\n/*UM_CONFIG",$data);
 	$_SESSION['email_admin']=strtolower($_POST['email_admin']);
 	if(file_put_contents('../includes/config.php',$data)){
@@ -101,6 +102,12 @@ $( document ).ready(function(){
     <label for="input_emaila">Enter Your personal email, this is used for creating a administrator user:</label>
     <input type="email" class="form-control" name="email_admin" required id="input_emaila" required placeholder="noreply@example.com"/>
   </div>
+	<div class="form-check">
+		<input class="form-check-input" type="checkbox" value="" id="referral" name="referral" checked="">
+		<label class="form-check-label" for="referral">
+		 Activate Referral System
+		</label>
+	</div>
   <div class="form-group">
     <label for="input_captcha1">If you want Recaptcha to be used for login and Registration and.. get a <a href="https://www.google.com/recaptcha/admin" target="_blank">Recaptcha V3</a> and enter it here. (Don't forget to add your domain there!)</label>
     <input type="text" class="form-control" name="captcha1" required id="input_captcha1" placeholder="SITE KEY"/>

@@ -160,54 +160,9 @@ $( document ).ready(function(){
         <nav class="col-md-2 col-sm-1 col-1 d-inline d-md-block bg-light sidebar" style="top:48px">
           <div class="sidebar-sticky">
             <ul class="nav flex-column">
-              <li class="nav-item">
-                <a class="nav-link active" href="#">
-                  <span data-feather="user"></span>
-                  <span class="d-none d-md-inline">Profile</span> <span class="sr-only">(current)</span>
-                </a>
-              </li>
-              <?php
-              if($_SESSION['UM_DATA']['perm']['admin']){
-              ?>
-              <li class="nav-item">
-                <a class="nav-link" href="admin.php">
-                  <span data-feather="star"></span>
-                  <span class="d-none d-md-inline">Admin</span>
-                </a>
-              </li>
-              <?php
-              }
-              ?>
-              <li class="nav-item">
-                <a class="nav-link" href="dashboard_example.php">
-                  <span data-feather="file"></span>
-                  <span class="d-none d-md-inline">Example</span>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  <span data-feather="shopping-cart"></span>
-                  <span class="d-none d-md-inline">Products</span>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  <span data-feather="users"></span>
-                  <span class="d-none d-md-inline">Customers</span>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  <span data-feather="bar-chart-2"></span>
-                  <span class="d-none d-md-inline">Reports</span>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  <span data-feather="layers"></span>
-                  <span class="d-none d-md-inline">Integrations</span>
-                </a>
-              </li>
+            <?php
+            	include('includes/dashboard_sidebar.php');
+            ?>
             </ul>
           </div>
         </nav>
@@ -242,6 +197,11 @@ if(@$ERROR){
 		}
   ?>
 </form>
+<?php
+if(UM_REFERRAL_ACTIVE){
+	echo '<div class="alert alert-light border-green rounded p-3">Your Referral Link:<div class="font-weight-bold rounded border border-primary text-center alert alert-primary text-dark">'.UM_DOMAIN.sprintf(UM_REFERRAL_FORMAT,$DATA['_id']).'</div></div>';
+}
+?>
 <form id="regForm2" action="user.php" method="post">
   <hr/>
   

@@ -12,11 +12,17 @@ define('UM_CAPTCHA_SECRET','6Lejf6kUAAAAAEYpOo7fX5Z0G6wFqFnKAvj7uABM');
 
 define('UM_DOMAIN','http://UserManager.example');
 define('UM_EMAIL_FROM','noreply@example.com');
+
+define('UM_REFERRAL_ACTIVE',true);//activates referral system in user dashboard
 /*UM_CONFIG*/
+define('UM_REFERRAL_FORMAT','/register.php?ref=%d');//you can change this to whatever page that config.php is loaded
 
 $DB=new mysqli(SQL_HOST,SQL_USER,SQL_PASS,SQL_DB);
 $DB->set_charset('utf8');
 session_start();
+if(!isset($_SESSION['ref']) && isset($_GET['ref'])){
+	$_SESSION['ref']=$_GET['ref'];
+}
 if(!isset($_SESSION['UM_DATA']) && isset($_COOKIE['UM_LOGIN'])){
 	$c=explode('_',$_COOKIE['UM_LOGIN']);
 	$r=$DB->query("select *,UNIX_TIMESTAMP(expire) as e from login_log where _id=".intval($c[0]))->fetch_assoc();

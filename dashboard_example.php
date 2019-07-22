@@ -46,54 +46,9 @@ $( document ).ready(function(){
         <nav class="col-md-2 col-sm-1 col-1 d-inline d-md-block bg-light sidebar" style="top:48px">
           <div class="sidebar-sticky">
             <ul class="nav flex-column">
-              <li class="nav-item">
-                <a class="nav-link" href="user.php">
-                  <span data-feather="user"></span>
-                  <span class="d-none d-md-inline">Profile</span>
-                </a>
-              </li>
-              <?php
-              if($_SESSION['perm']['admin']){
-              ?>
-              <li class="nav-item">
-                <a class="nav-link" href="admin.php">
-                  <span data-feather="star"></span>
-                  <span class="d-none d-md-inline">Admin</span>
-                </a>
-              </li>
-              <?php
-              }
-              ?>
-              <li class="nav-item">
-                <a class="nav-link active" href="#">
-                  <span data-feather="file"></span>
-                  <span class="d-none d-md-inline">Example</span><span class="sr-only">(current)</span>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  <span data-feather="shopping-cart"></span>
-                  <span class="d-none d-md-inline">Products</span>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  <span data-feather="users"></span>
-                  <span class="d-none d-md-inline">Customers</span>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  <span data-feather="bar-chart-2"></span>
-                  <span class="d-none d-md-inline">Reports</span>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  <span data-feather="layers"></span>
-                  <span class="d-none d-md-inline">Integrations</span>
-                </a>
-              </li>
+            <?php
+            	include('includes/dashboard_sidebar.php');
+            ?>
             </ul>
           </div>
         </nav>

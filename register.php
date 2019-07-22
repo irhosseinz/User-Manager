@@ -20,9 +20,13 @@ if(isset($_GET['exist'])){
 	exit;
 }else if(isset($_POST['email'])){
 	$_POST['email']=strtolower($_POST['email']);
-	$query="insert into users set email_temp=?,password=?";
-	$st_type='ss';
-	$st_values=array($_POST['email'],UM_PASSWORD($_POST['password']));
+	$query="insert into users set ref=?,email_temp=?,password=?";
+	$st_type='sss';
+	$st_values=array(
+		isset($_SESSION['ref'])?$_SESSION['ref']:null
+		,$_POST['email']
+		,UM_PASSWORD($_POST['password'])
+		);
 	$fs=json_decode($UM_CONFIG['FIELDS'],true);
 	try{
 		if(UM_CAPTCHA_SITE && !UM_VerifyCaptcha($_POST['captcha'])){

@@ -41,6 +41,7 @@ if($_POST){
 	}
 	$ok=$DB->multi_query("CREATE TABLE IF NOT EXISTS `users` (
   `_id` int(11) NOT NULL AUTO_INCREMENT,
+  `ref` varchar(50) DEFAULT NULL,
   `email` varchar(50) NULL,
   `email_temp` varchar(50) NOT NULL,
   `password` varchar(255) NOT NULL,
