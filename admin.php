@@ -12,7 +12,22 @@ if(!$_SESSION['UM_DATA']['perm']['admin']){
 $SUCCESS=false;
 $ERROR=false;
 if(isset($_GET['list'])){
-	$q=$DB->query("select * from users order by _id desc limit ".intval($_GET['list']).",10");
+	switch(@$_GET['g']){
+		case 'search':
+			if(isset($_GET['email'])){
+				$st=$DB->prepare("select * from users where email like ?");
+				$email="%{$_GET['email']}%";
+				$st->bind_param('s',$email);
+				$st->execute();
+				$q=$st->get_result();
+			}else if(isset($_GET['id'])){
+				$q=$DB->query("select * from users where _id=".intval($_GET['id']));
+			}
+			break;
+		default:
+			$q=$DB->query("select * from users order by _id desc limit ".intval($_GET['list']).",10");
+			break;
+	}
 	if(!$q){
 		echo $DB->error;
 	}
@@ -60,11 +75,11 @@ if(isset($_GET['list'])){
     <link rel="icon" href="/img/favicon.png">
     <title>Dashboard - Admin</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/dashboard.css" rel="stylesheet">
+    <link href="css/dashboard.css?v=1.00" rel="stylesheet">
     <script src="js/jquery-3.4.1.min.js"></script>
     <script src="js/bootstrap.bundle.js"></script>
 	 <script src="/js/jquery.validate.min.js"></script>
-<script type="text/javascript" src="js/admin.js?v=1.31"></script>
+<script type="text/javascript" src="js/admin.js?v=1.32"></script>
 </head>
 <body>
 <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -114,8 +129,8 @@ $DATA=$DB->query("select * from users where _id={$_SESSION['UM_DATA']['_id']}")-
 <table class="table table-striped table-hover">
 	<thead>
 		<tr>
-		<th scope="col">#</th>
-		<th scope="col">Email</th>
+		<th scope="col" class="align-middle"><input name="id" class="t-input search_users" placeholder="#"/></th>
+		<th scope="col" class="align-middle"><input name="email" class="t-input search_users" placeholder="Email"/></th>
 		<?php
 		$fs=json_decode($UM_CONFIG['FIELDS'],true);
 		$fs_ids=array();
@@ -149,6 +164,12 @@ $DATA=$DB->query("select * from users where _id={$_SESSION['UM_DATA']['_id']}")-
 			A=new Admin(<?php echo $UM_CONFIG['FIELDS'].','.json_encode($_SESSION['UM_DATA']['perm']);?>);
 			A.getUsers(0);
 			$('[data-toggle="popover"]').popover();
+			$('.search_users').keydown(function(event){
+				A.search_change(event.target);
+			});
+			$('.search_users').keyup(function(event){
+				A.search_users(event.target);
+			});
 		});
       feather.replace();
     </script>

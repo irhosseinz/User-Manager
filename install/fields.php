@@ -55,6 +55,7 @@ if($_POST){
 CREATE TABLE IF NOT EXISTS `login_log` (
   `_id` bigint(15) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
+  `ip` VARCHAR(20) NULL DEFAULT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `expire` timestamp NULL,
   `secret` varchar(50) NOT NULL,

@@ -72,6 +72,29 @@ Admin.prototype.admin = function(i) {
 	$('#modal_body').html(html);
 	$('#modal').modal()
 }
+Admin.prototype.show_users = function(data) {
+	$('#users').html('');
+	var self=this;
+	for(var j in data){
+		var html='<tr class="'+(data[j].perm.admin?'table-success':'')+'"><th scope="row" class="align-middle">'+data[j]._id+'</th>';
+		html+='<td class="align-middle">'+(data[j].email?data[j].email+'<span class="badge badge-secondary">VERIFIED</span>':data[j].email_temp)+'</td>';
+//			for(var k in self.fs){
+//				if(self.fs[k].nget)
+//					continue;
+//				html+='<td class="align-middle">'+data[j][k]+'</td>';
+//			}
+		html+='<td class="align-middle"><a class="btn btn-primary m-1" onclick="A.view('+j+')"><span data-feather="eye" color="#ffffff" stroke-width="3"></span></a>';
+		if(self.perm.edit_admin){
+			html+='<a class="btn btn-info m-1" onclick="A.admin('+j+')"><span data-feather="unlock" color="#ffffff" stroke-width="3"></span></a>';
+		}
+		if(self.perm.edit_password){
+			html+='<a class="btn btn-warning m-1" onclick="A.password('+j+')"><span data-feather="key" color="#ffffff" stroke-width="3"></span></a>';
+		}
+		html+='</td></tr>';
+		$('#users').append(html);
+	}
+	feather.replace();
+}
 Admin.prototype.getUsers = function(i) {
 	var self=this;
 	if(i===this.list_current){
@@ -97,25 +120,26 @@ Admin.prototype.getUsers = function(i) {
 			self.list_next=self.list_current;
 			self.list_current=i;
 		}
-		$('#users').html('');
-		for(var j in data){
-			var html='<tr class="'+(data[j].perm.admin?'table-success':'')+'"><th scope="row" class="align-middle">'+data[j]._id+'</th>';
-			html+='<td class="align-middle">'+(data[j].email?data[j].email+'<span class="badge badge-secondary">VERIFIED</span>':data[j].email_temp)+'</td>';
-//			for(var k in self.fs){
-//				if(self.fs[k].nget)
-//					continue;
-//				html+='<td class="align-middle">'+data[j][k]+'</td>';
-//			}
-			html+='<td class="align-middle"><a class="btn btn-primary m-1" onclick="A.view('+j+')"><span data-feather="eye" color="#ffffff" stroke-width="3"></span></a>';
-			if(self.perm.edit_admin){
-				html+='<a class="btn btn-info m-1" onclick="A.admin('+j+')"><span data-feather="unlock" color="#ffffff" stroke-width="3"></span></a>';
-			}
-			if(self.perm.edit_password){
-				html+='<a class="btn btn-warning m-1" onclick="A.password('+j+')"><span data-feather="key" color="#ffffff" stroke-width="3"></span></a>';
-			}
-			html+='</td></tr>';
-			$('#users').append(html);
-		}
-      feather.replace();
+		self.show_users(data);
 	},'json');
+}
+Admin.prototype.search_change = function() {
+	this.search_changed=true;
+}
+Admin.prototype.search_users = function(input) {
+	var self=this;
+	this.search_changed=false;
+	this.search_i=input;
+	if(input.value.length<3 || input.value===this.search_last){
+		return;
+	}
+	this.search_last=input.value;
+	setTimeout(function(){
+		if(self.search_changed){
+			return;
+		}
+		$.get('admin.php?list&g=search&'+input.getAttribute('name')+'='+input.value,function(data){
+			self.show_users(data);
+		},'json');
+	},1000);
 }

@@ -51,7 +51,9 @@ if(isset($_POST['forget'])){
 			$data=$st->get_result()->fetch_assoc();
 			if(UM_PASSWORD_VERIFY($_POST['password'],$data['password'])){
 				$SUCCESS=true;
-				$DB->query("insert into login_log set user_id={$data['_id']}{$e},secret='{$p}'");
+				$ip=(isset($_SERVER['HTTP_CF_CONNECTING_IP'])?$_SERVER['HTTP_CF_CONNECTING_IP']:$_SERVER['REMOTE_ADDR']);
+				$ip=preg_replace('%[^0-9.]+%','',$ip);
+				$DB->query("insert into login_log set user_id={$data['_id']},ip='{$ip}'{$e},secret='{$p}'");
 				$cookie="{$DB->insert_id}_{$p}";
 				$_SESSION['UM_DATA']=array('_id'=>$data['_id'],'cookie'=>$cookie);
 				$_SESSION['UM_DATA']['perm']=decodeConfig($data['perm']);
