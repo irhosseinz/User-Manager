@@ -125,7 +125,7 @@ if(isset($_GET['list'])){
 <?php
 $DATA=$DB->query("select * from users where _id={$_SESSION['UM_DATA']['_id']}")->fetch_assoc();
 ?>
-<div class="container alert alert-secondary border-green rounded p-3">
+<div class="container alert alert-secondary border-green rounded p-3 table-responsive">
 <table class="table table-striped table-hover">
 	<thead>
 		<tr>
