@@ -74,6 +74,10 @@ Admin.prototype.admin = function(i) {
 }
 Admin.prototype.show_users = function(data) {
 	$('#users').html('');
+	if(data.length==0){
+		return;
+	}
+	this.user_data=data;
 	var self=this;
 	for(var j in data){
 		var html='<tr class="'+(data[j].perm.admin?'table-success':'')+'"><th scope="row" class="align-middle">'+data[j]._id+'</th>';
@@ -104,7 +108,6 @@ Admin.prototype.getUsers = function(i) {
 		if(data.length==0){
 			return;
 		}
-		self.user_data=data;
 		if(i==0){
 			self.list_next=i+data.length;
 			self.list_prev=0;
