@@ -201,6 +201,9 @@ if(@$ERROR){
 if(UM_REFERRAL_ACTIVE){
 	echo '<div class="alert alert-light border-green rounded p-3">Your Referral Link:<div class="font-weight-bold rounded border border-primary text-center alert alert-primary text-dark">'.UM_DOMAIN.sprintf(UM_REFERRAL_FORMAT,$DATA['_id']).'</div></div>';
 }
+if(UM_AUTHENTICATOR_ACTIVE && $DATA['email'] && !$DATA['authen_secret']){
+	echo '<div class="alert alert-warning border-green rounded p-3">2 Step Authentication Is not Enabled. Activate it <a href="authenticator.php">Here</a></div>';
+}
 ?>
 <form id="regForm2" action="user.php" method="post">
   <hr/>

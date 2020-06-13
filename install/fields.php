@@ -44,6 +44,7 @@ if($_POST){
   `ref` varchar(50) DEFAULT NULL,
   `email` varchar(50) NULL,
   `email_temp` varchar(50) NOT NULL,
+  `authen_secret` varchar(50) NULL,
   `password` varchar(255) NOT NULL,
   `reg_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `perm` int(4) NOT NULL DEFAULT 0,
@@ -80,7 +81,7 @@ CREATE TABLE IF NOT EXISTS `verify` (
 		$ERROR="there was an error while creating tables: ".$DB->error;
 	}
 	$password=UM_randomString(8);
-	if($_SESSION['email_admin'] && $DB->query("INSERT INTO users set email='{$_SESSION['email_admin']}',password='".UM_PASSWORD($password)."'")){
+	if($_SESSION['email_admin'] && $DB->query("INSERT INTO users set email='{$_SESSION['email_admin']}',password='".UM_PASSWORD($password)."',perm=15")){
 		$_SESSION['UM_ADMIN']=array($_SESSION['email_admin'],$password);
 	}
 	$rules=array();

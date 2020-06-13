@@ -1,6 +1,7 @@
 <?php
 include_once('includes/config.php');
 include_once('includes/umf.php');
+include_once('includes/authenticator.php');
 if(isset($_GET['logout'])){
 	unset($_SESSION['UM_DATA']);
 	setcookie('UM_LOGIN','',-1);
@@ -11,6 +12,7 @@ if(isset($_SESSION['UM_DATA'])){
 }
 $SUCCESS=false;
 $ERROR=false;
+$Request2FA=false;
 if(isset($_POST['forget'])){
 	if(UM_CAPTCHA_SITE && !UM_VerifyCaptcha($_POST['captcha'])){
 		$ERROR='ARE YOU A BOT??';
@@ -50,23 +52,39 @@ if(isset($_POST['forget'])){
 		if($st->execute()){
 			$data=$st->get_result()->fetch_assoc();
 			if(UM_PASSWORD_VERIFY($_POST['password'],$data['password'])){
-				$SUCCESS=true;
-				$ip=(isset($_SERVER['HTTP_CF_CONNECTING_IP'])?$_SERVER['HTTP_CF_CONNECTING_IP']:$_SERVER['REMOTE_ADDR']);
-				$ip=preg_replace('%[^0-9.]+%','',$ip);
-				$DB->query("insert into login_log set user_id={$data['_id']},ip='{$ip}'{$e},secret='{$p}'");
-				$cookie="{$DB->insert_id}_{$p}";
-				$_SESSION['UM_DATA']=array('_id'=>$data['_id'],'cookie'=>$cookie);
-				$_SESSION['UM_DATA']['perm']=decodeConfig($data['perm']);
-				if(isset($_POST['remember'])){
-					setcookie('UM_LOGIN',$cookie,array('expires'=>time()+((UM_LOGIN_EXPIRE>0?UM_LOGIN_EXPIRE:365)*24*3600),'httponly'=>true));
+				$SUCCESS=false;
+				if(UM_AUTHENTICATOR_ACTIVE && $data['authen_secret']){
+					if($_POST['2FA']){
+						$ga = new PHPGangsta_GoogleAuthenticator();
+						if($ga->verifyCode($data['authen_secret'], $_POST['2FA'], UM_AUTHENTICATOR_TOL)){
+							$SUCCESS=true;
+						}else{
+							$Request2FA=true;
+							$ERROR="Wrong Code";
+						}
+					}else{
+						$Request2FA=true;
+					}
+				}else
+					$SUCCESS=true;
+				if($SUCCESS){
+					$ip=(isset($_SERVER['HTTP_CF_CONNECTING_IP'])?$_SERVER['HTTP_CF_CONNECTING_IP']:$_SERVER['REMOTE_ADDR']);
+					$ip=preg_replace('%[^0-9.]+%','',$ip);
+					$DB->query("insert into login_log set user_id={$data['_id']},ip='{$ip}'{$e},secret='{$p}'");
+					$cookie="{$DB->insert_id}_{$p}";
+					$_SESSION['UM_DATA']=array('_id'=>$data['_id'],'cookie'=>$cookie);
+					$_SESSION['UM_DATA']['perm']=decodeConfig($data['perm']);
+					if(isset($_POST['remember'])){
+						setcookie('UM_LOGIN',$cookie,array('expires'=>time()+((UM_LOGIN_EXPIRE>0?UM_LOGIN_EXPIRE:365)*24*3600),'httponly'=>true));
+					}
+					if(isset($_POST['return']) && $_POST['return'][0]=='/'){
+						$return=$_POST['return'];
+					}else{
+						$return='user.php';
+					}
+					header("Location: {$return}");
+					exit;
 				}
-				if(isset($_POST['return']) && $_POST['return'][0]=='/'){
-					$return=$_POST['return'];
-				}else{
-					$return='user.php';
-				}
-				header("Location: {$return}");
-				exit;
 			}
 		}else{
 			
@@ -74,7 +92,7 @@ if(isset($_POST['forget'])){
 	}catch(Exception $e){
 		$ERROR=$e->getMessage();
 	}
-	if(!$SUCCESS && !$ERROR)
+	if(!$Request2FA && !$SUCCESS && !$ERROR)
 		$ERROR='Invalid username or password!';
 }
 ?>
@@ -184,8 +202,19 @@ if(isset($_GET['forget'])){
 <?php
 }else{
 ?>
-<h1>Login Form</h1>
 <form id="form" action="login.php" method="post">
+	<?php
+	if($Request2FA){
+		echo '<input type="hidden" name="email" value="'.$_POST['email'].'"/><input type="hidden" name="password" value="'.$_POST['password'].'"/>';
+	?>
+	<div class="form-group">
+		<label for="input_email">Enter Code From Google Authenticator App</label>
+		<input type="number" class="form-control" name="2FA" placeholder="000000" autocomplete="off"/>
+	</div>
+	<?php
+	}else{
+	?>
+	<h1>Login Form</h1>
   <div class="form-group">
     <label for="input_email">Email address</label>
     <input type="email" class="form-control" name="email" required id="input_email" value="<?php echo @$_POST['email'];?>"/>
@@ -198,12 +227,13 @@ if(isset($_GET['forget'])){
     <input type="checkbox" class="form-check-input" name="remember" id="input_remember"/>
     <label for="input_remember" class="form-check-label">Remember Me</label>
   </div>
-  <input type="hidden" name="captcha" id="captcha"/>
-  <?php
+	<?php
+	}
 	if(isset($_GET['return'])){
 		echo '<input type="hidden" name="return" value="'.$_GET['return'].'">';
 	}
 	?>
+	<input type="hidden" name="captcha" id="captcha"/>
   <br/><button type="submit" class="btn btn-primary my-1" id="submit">Submit</button>
 	<?php
 	if(UM_CAPTCHA_SITE){

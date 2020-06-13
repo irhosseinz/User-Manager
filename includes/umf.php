@@ -40,25 +40,26 @@ function UM_VerifyCaptcha($response){
 	return @$json['success'];
 }
 function decodeConfig($c){
-	global $UM_PERM;
 	$c=intval($c);
-	$o=array();
-	foreach($UM_PERM as $k=>$v){
-		$k=intval($k);
-		$o[$k]=((($c&pow(2,$k))>>$k)==1);
-	}
-	return $o;
+	return array(
+		'admin'=>((($c&1)>>0)==1)
+		,'edit_admin'=>((($c&2)>>1)==1)
+		,'edit_password'=>((($c&4)>>2)==1)
+		,'payout'=>((($c&8)>>3)==1)
+	);
 }
 function encodeConfig($setting){
 	if(!$setting)
 		return 0;
-	global $UM_PERM;
 	$o=0;
-	foreach($UM_PERM as $k=>$v){
-		$k=intval($k);
-		if($setting[$v])
-			$o+=pow(2,$k);
-	}
+	if($setting['admin'])
+		$o+=(1);
+	if($setting['edit_admin'])
+		$o+=(2);
+	if($setting['edit_password'])
+		$o+=(4);
+	if($setting['payout'])
+		$o+=(8);
 	return $o;
 }
 ?>

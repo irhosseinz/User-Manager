@@ -28,6 +28,7 @@ if($_POST){
 	$db.="\n\ndefine('UM_DOMAIN','{$d}');";
 	$db.="\ndefine('UM_EMAIL_FROM','{$_POST['email']}');";
 	$db.="\n\ndefine('UM_REFERRAL_ACTIVE',".(isset($_POST['referral'])?'true':'false').");//activates referral system in user dashboard";
+	$db.="\n\ndefine('UM_AUTHENTICATOR_ACTIVE',".(isset($_POST['authenticator'])?'true':'false').");//activates authenticator system in user dashboard\ndefine('UM_AUTHENTICATOR_TOL',2);//time tolerance for code verification(minutes)";
 	$data=preg_replace('%UM_CONFIG\*\/[\s\S]+\/\*UM_CONFIG%',"UM_CONFIG*/\n{$db}\n/*UM_CONFIG",$data);
 	$_SESSION['email_admin']=strtolower($_POST['email_admin']);
 	if(file_put_contents('../includes/config.php',$data)){
@@ -105,7 +106,13 @@ $( document ).ready(function(){
 	<div class="form-check">
 		<input class="form-check-input" type="checkbox" value="" id="referral" name="referral" checked="">
 		<label class="form-check-label" for="referral">
-		 Activate Referral System
+			Activate Referral System
+		</label>
+	</div><br/><br/>
+	<div class="form-check">
+		<input class="form-check-input" type="checkbox" value="" id="authenticator" name="authenticator" checked="">
+		<label class="form-check-label" for="referral">
+			Activate Google Authenticator Support
 		</label>
 	</div><br/><br/>
   <div class="form-group">
