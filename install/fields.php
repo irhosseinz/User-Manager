@@ -74,8 +74,13 @@ CREATE TABLE IF NOT EXISTS `verify` (
   PRIMARY KEY (`_id`),
   KEY `email` (`email`)
 ) ENGINE=InnoDB;");
+	if($ok){
+		while($DB->next_result()){;}
+	}else{
+		$ERROR="there was an error while creating tables: ".$DB->error;
+	}
 	$password=UM_randomString(8);
-	if($_SESSION['email_admin'] && $DB->query("INSERT INTO users set email_temp='{$_SESSION['email_admin']}',password='".UM_PASSWORD($password)."'")){
+	if($_SESSION['email_admin'] && $DB->query("INSERT INTO users set email='{$_SESSION['email_admin']}',password='".UM_PASSWORD($password)."'")){
 		$_SESSION['UM_ADMIN']=array($_SESSION['email_admin'],$password);
 	}
 	$rules=array();
@@ -134,7 +139,7 @@ CREATE TABLE IF NOT EXISTS `verify` (
 		header('Location: finish.php');
 		$DB->close();
 		exit;
-	}else{
+	}else if(!$ERROR){
 		$ERROR="there was an error! please check includes/config.php file permission. (make it 777) ".$DB->error;
 	}
 }

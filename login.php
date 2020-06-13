@@ -16,7 +16,7 @@ if(isset($_POST['forget'])){
 		$ERROR='ARE YOU A BOT??';
 	}else{
 		$_POST['forget']=strtolower($_POST['forget']);
-		$st=$DB->prepare("select * from users where email=? or email_temp=? order by email!=? limit 1");
+		$st=$DB->prepare("select * from users where email=? or email_temp=? order by email is null,email!=? limit 1");
 		$st->bind_param('sss',$_POST['forget'],$_POST['forget'],$_POST['forget']);
 		if($st->execute() && $r=$st->get_result()->fetch_assoc()){
 			$st=$DB->prepare("insert into verify set user_id=?,email=?,secret=?,action=?");
@@ -45,7 +45,7 @@ if(isset($_POST['forget'])){
 		$_POST['email']=strtolower($_POST['email']);
 		$e=",expire=TIMESTAMPADD(DAY,".(UM_LOGIN_EXPIRE>0?UM_LOGIN_EXPIRE:365).",NOW())";
 		$p=UM_randomString(rand(30,40));
-		$st=$DB->prepare("select * from users where email=? or email_temp=? order by email!=? limit 1");
+		$st=$DB->prepare("select * from users where email=? or email_temp=? order by email is null,email!=? limit 1");
 		$st->bind_param('sss',$_POST['email'],$_POST['email'],$_POST['email']);
 		if($st->execute()){
 			$data=$st->get_result()->fetch_assoc();

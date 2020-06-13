@@ -62,7 +62,7 @@ $( document ).ready(function(){
 	$("#form").validate({
 		focusInvalid: false,onkeyup: false,
 		errorClass: "is-invalid",validClass: "is-valid",
-		rules:{domain:{url:true},email:{email:true}}
+		rules:{domain:{url:true},email:{email:true}},
 		submitHandler: function(form) {
 			form.submit();
 		}
@@ -107,7 +107,7 @@ $( document ).ready(function(){
 		<label class="form-check-label" for="referral">
 		 Activate Referral System
 		</label>
-	</div>
+	</div><br/><br/>
   <div class="form-group">
     <label for="input_captcha1">If you want Recaptcha to be used for login and Registration and.. get a <a href="https://www.google.com/recaptcha/admin" target="_blank">Recaptcha V3</a> and enter it here. (Don't forget to add your domain there!)</label>
     <input type="text" class="form-control" name="captcha1" required id="input_captcha1" placeholder="SITE KEY"/>
