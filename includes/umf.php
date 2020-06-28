@@ -1,5 +1,6 @@
 <?php
 include_once(__DIR__.'/config.php');
+include_once(__DIR__.'/captcha.php');
 function UM_randomString($len){
 	$string = '1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM';
 	$length=strlen($string);
@@ -25,7 +26,7 @@ function UM_PASSWORD($password){
 function UM_PASSWORD_VERIFY($password,$hash){
 	return password_verify($password,$hash);
 }
-function UM_VerifyCaptcha($response){
+function UM_VerifyRecaptcha($response){
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL, 'https://www.google.com/recaptcha/api/siteverify');
 	curl_setopt($ch, CURLOPT_HEADER, false);
@@ -37,7 +38,11 @@ function UM_VerifyCaptcha($response){
 	$result = curl_exec($ch);
 	$json=json_decode($result,true);
 	curl_close($ch);
-	return @$json['success'];
+	return (@$json['success'] && $json['score']>0.1);
+}
+function UM_VerifyCaptcha($response){
+	$ch = new Captcha(UM_CAPTCHA_SESSION,UM_CAPTCHA_LENGTH);
+	return $ch->validateCaptcha($response);
 }
 function decodeConfig($c){
 	$c=intval($c);

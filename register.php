@@ -29,8 +29,11 @@ if(isset($_GET['exist'])){
 		);
 	$fs=json_decode($UM_CONFIG['FIELDS'],true);
 	try{
-		if(UM_CAPTCHA_SITE && !UM_VerifyCaptcha($_POST['captcha'])){
-			throw new Exception('ARE YOU A BOT??');
+		if(UM_CAPTCHA_SITE && !UM_VerifyRecaptcha($_POST['captcha'])){
+			throw new Exception('Login Form Expired. Try Again!');
+		}
+		if(UM_SIMPLE_CAPTCHA && !UM_VerifyCaptcha($_POST['captcha0'])){
+			throw new Exception('Wrong Captcha Code!');
 		}
 		foreach($fs as $k=>$v){
 			if($v['required'] && !$_POST[$k]){

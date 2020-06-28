@@ -7,6 +7,7 @@ define('SQL_DB','um');
 define('SQL_USER','um');
 define('SQL_PASS','3HaE8VXMblIxsHIl');
 
+define('UM_SIMPLE_CAPTCHA',true);
 define('UM_CAPTCHA_SITE','6Lejf6kUAAAAAKHpy37byUNy95qpiSWQIBHK9_mk');
 define('UM_CAPTCHA_SECRET','6Lejf6kUAAAAAEYpOo7fX5Z0G6wFqFnKAvj7uABM');
 

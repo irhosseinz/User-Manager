@@ -14,8 +14,10 @@ $SUCCESS=false;
 $ERROR=false;
 $Request2FA=false;
 if(isset($_POST['forget'])){
-	if(UM_CAPTCHA_SITE && !UM_VerifyCaptcha($_POST['captcha'])){
+	if(UM_CAPTCHA_SITE && !UM_VerifyRecaptcha($_POST['captcha'])){
 		$ERROR='ARE YOU A BOT??';
+	}else if(UM_SIMPLE_CAPTCHA && !UM_VerifyCaptcha($_POST['captcha0'])){
+		$ERROR=('Wrong Captcha Code!');
 	}else{
 		$_POST['forget']=strtolower($_POST['forget']);
 		$st=$DB->prepare("select * from users where email=? or email_temp=? order by email is null,email!=? limit 1");
@@ -41,8 +43,11 @@ if(isset($_POST['forget'])){
 	}
 }else if(isset($_POST['email'])){
 	try{
-		if(UM_CAPTCHA_SITE && !UM_VerifyCaptcha($_POST['captcha'])){
-			throw new Exception('ARE YOU A BOT??');
+		if(UM_CAPTCHA_SITE && !UM_VerifyRecaptcha($_POST['captcha'])){
+			throw new Exception('Login Form Expired. Try Again!');
+		}
+		if(UM_SIMPLE_CAPTCHA && !UM_VerifyCaptcha($_POST['captcha0'])){
+			throw new Exception('Wrong Captcha Code!');
 		}
 		$_POST['email']=strtolower($_POST['email']);
 		$e=",expire=TIMESTAMPADD(DAY,".(UM_LOGIN_EXPIRE>0?UM_LOGIN_EXPIRE:365).",NOW())";
@@ -183,6 +188,17 @@ if(isset($_GET['forget'])){
     <input type="email" class="form-control" name="forget" required id="input_email"/>
   </div>
   <input type="hidden" name="captcha" id="captcha"/>
+  <?php
+	if(UM_SIMPLE_CAPTCHA){
+		echo '<div class="input-group mx-sm-3 mb-2">
+		<div class="input-group-prepend">
+		  <div class="input-group-text" id="btnGroupAddon2">Captcha</div>
+		</div>
+		<img src="/captcha.jpg?'.time().'"/>
+		<input type="text" class="form-control col-md-2" placeholder="Enter It Here" name="captcha0" autocomplete="off"/>
+	  </div>';
+	}
+  ?>
   <br/><button type="submit" class="btn btn-primary my-1">Submit</button>
   <?php
 	if(UM_CAPTCHA_SITE){
@@ -234,6 +250,17 @@ if(isset($_GET['forget'])){
 	}
 	?>
 	<input type="hidden" name="captcha" id="captcha"/>
+  <?php
+	if(UM_SIMPLE_CAPTCHA){
+		echo '<div class="input-group mx-sm-3 mb-2">
+		<div class="input-group-prepend">
+		  <div class="input-group-text" id="btnGroupAddon2">Captcha</div>
+		</div>
+		<img src="/captcha.jpg?'.time().'"/>
+		<input type="text" class="form-control col-md-2" placeholder="Enter It Here" name="captcha0" autocomplete="off"/>
+	  </div>';
+	}
+  ?>
   <br/><button type="submit" class="btn btn-primary my-1" id="submit">Submit</button>
 	<?php
 	if(UM_CAPTCHA_SITE){

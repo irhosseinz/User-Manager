@@ -15,6 +15,9 @@ if($_POST){
 	$data=file_get_contents('../includes/config.php');
 	$data=preg_replace('%UM_DATA\*\/"TITLE"[\s\S]+\n%U','UM_DATA*/"TITLE"=>\''.$_POST['title'].'\''."\n",$data);
 	$db="define('SQL_HOST','{$_POST['host']}');\ndefine('SQL_DB','{$_POST['name']}');\ndefine('SQL_USER','{$_POST['user']}');\ndefine('SQL_PASS','{$_POST['password']}');";
+	if(@$_POST['simple_captcha']){
+		$db.="\n\ndefine('UM_SIMPLE_CAPTCHA',true);";
+	}
 	if(@$_POST['captcha1']){
 		$db.="\n\ndefine('UM_CAPTCHA_SITE','{$_POST['captcha1']}');\ndefine('UM_CAPTCHA_SECRET','{$_POST['captcha2']}');";
 	}else{
@@ -115,11 +118,17 @@ $( document ).ready(function(){
 			Activate Google Authenticator Support
 		</label>
 	</div><br/><br/>
-  <div class="form-group">
+	<div class="form-check">
+		<input class="form-check-input" type="checkbox" value="" id="authenticator" name="simple_captcha" checked="">
+		<label class="form-check-label" for="referral">
+			Activate Simple Captcha Code For Login And Registration
+		</label>
+	</div>
+  <!-- <div class="form-group">
     <label for="input_captcha1">If you want Recaptcha to be used for login and Registration and.. get a <a href="https://www.google.com/recaptcha/admin" target="_blank">Recaptcha V3</a> and enter it here. (Don't forget to add your domain there!)</label>
     <input type="text" class="form-control" name="captcha1" required id="input_captcha1" placeholder="SITE KEY"/>
     <input type="text" class="form-control" name="captcha2" required id="input_email" placeholder="SECRET KEY"/>
-  </div>
+  </div> -->
   <h3>Mysql Configuration:</h3>
   <div class="form-group">
     <label for="input_host">Database Host</label>
