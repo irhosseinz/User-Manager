@@ -40,7 +40,7 @@ You can add as many extra data fields for user, based on your project. for each 
 * __Email Verification__
 * __Password Reset__: User can reset his/her password in case of forgeting that
 * __Secure__: All security measures are observed
-* __Recaptcha Support__: A Simple Captcha Code Could be Activated to Be used for Login And Registeration.
+* __Captcha Support__: A Simple Captcha Code Could be Activated to Be used for Login And Registeration.
 * __Recaptcha Support__: Additionally You can get [Recaptcha V3](https://www.google.com/recaptcha/admin) api Keys and enter it while Installation, so recaptcha will be used in _background_ on login. (Google Recaptcha V3 is not For Actual Bot detection. It could be used if You don't want captcha but still want to know that someone trying to do some automation on your website.) 
 * __Referral System__: There is an optional referral system that could be activated on installation. using that users can get a referral link and introduce your system to others, you can view its data in admin panel and you can use it for other cases by accessing `ref` field in `users` table in database
 * __Google Authenticator__: There is an optional [google authenticator](https://en.wikipedia.org/wiki/Google_Authenticator) support that could be activated on installation. using that users can activate two factor verification in their account for more security.
