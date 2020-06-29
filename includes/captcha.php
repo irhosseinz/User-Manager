@@ -51,13 +51,16 @@ class Captcha
     }
     
     
-    function validateCaptcha($formData) {
+    function validateCaptcha($formData,$keep_session=false) {
         $isValid = false;
         $capchaSessionData = $this-> getSession();
         
-        if(strtolower($capchaSessionData) == strtolower($formData)) 
+        if(strlen($capchaSessionData)==UM_CAPTCHA_LENGTH && strtolower($capchaSessionData) == strtolower($formData)) 
         {
             $isValid = true;
+        }
+        if(!$keep_session){
+            $this->setSession('');
         }
         return $isValid;
     }
